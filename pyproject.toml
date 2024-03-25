@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "sonet-sim"
+version = "0.0.0"
+description = "A library for (so)cial (net)work (sim)ulation."
+authors = ["ksan <casonk@umich.edu>"]
+license = "LGPL"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+cdlib = "^0.3.0"
+bayanpy = "^0.7.6"
+leidenalg = "^0.10.1"
+wurlitzer = "^3.0.3"
+infomap = "^2.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
