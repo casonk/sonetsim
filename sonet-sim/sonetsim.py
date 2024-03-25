@@ -269,10 +269,10 @@ def simulation(
         else:
             try:
                 param = np.array(param)
-            except TypeError:
+            except TypeError  as exc:
                 raise TypeError(
                     f"Parameter {param} must be a float or array-like of floats."
-                )
+                ) from exc
         return param
 
     # Execute paramater checks
