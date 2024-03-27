@@ -611,7 +611,7 @@ def evaluate_communities_parallel(
 
     # Resolve graph independent edge attributes
     source_nodes = np.array([e[0] for e in count_graph.edges()])
-    destination_nodes = np.array([e[0] for e in count_graph.edges()])
+    destination_nodes = np.array([e[1] for e in count_graph.edges()])
     edge_sentiments = np.array(
         list(nx.get_edge_attributes(positive_sentiment_graph, "weight").values())
     )
@@ -1113,7 +1113,7 @@ def evaluate_communities_serial(
 
     # Resolve graph independent edge attributes
     source_nodes = np.array([e[0] for e in count_graph.edges()])
-    destination_nodes = np.array([e[0] for e in count_graph.edges()])
+    destination_nodes = np.array([e[1] for e in count_graph.edges()])
     edge_sentiments = np.array(
         list(nx.get_edge_attributes(positive_sentiment_graph, "weight").values())
     )
