@@ -50,9 +50,9 @@ class GraphSimulator:
         
         # Set graph simulation parameters
         self.homophily  = __check_param__(self, homophily)
-        self.isolation  = __check_param__(self, homophily)
-        self.insulation = __check_param__(self, homophily)
-        self.affinity   = __check_param__(self, homophily)
+        self.isolation  = __check_param__(self, isolation)
+        self.insulation = __check_param__(self, insulation)
+        self.affinity   = __check_param__(self, affinity)
 
         self.seed = seed
         self.nodes = None
