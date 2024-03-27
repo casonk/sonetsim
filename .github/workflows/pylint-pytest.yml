@@ -31,4 +31,5 @@ jobs:
         path: pylint.txt
     - name: Run the test cases
       run: |
+        cd ..
         pytest -v
