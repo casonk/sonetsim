@@ -34,7 +34,7 @@ class GraphSimulator:
         assert self.num_communities > 0, "Number of communities must be greater than 0"
 
         # Function to check & update simulation parameters
-        def __check_param__(self, param):
+        def __check_param__(param):
             if type(param) in [int, float]:
                 if param < 0 or param > 1:
                     raise ValueError(f"Parameter {param} must be between 0 and 1.")
@@ -49,10 +49,10 @@ class GraphSimulator:
             return param
         
         # Set graph simulation parameters
-        self.homophily  = __check_param__(self, homophily)
-        self.isolation  = __check_param__(self, isolation)
-        self.insulation = __check_param__(self, insulation)
-        self.affinity   = __check_param__(self, affinity)
+        self.homophily  = __check_param__(homophily)
+        self.isolation  = __check_param__(isolation)
+        self.insulation = __check_param__(insulation)
+        self.affinity   = __check_param__(affinity)
 
         self.seed = seed
         self.nodes = None
@@ -182,6 +182,219 @@ class GraphSimulator:
         self.__initialize_graphs__()
 
         return self.positive_sentiment_graph, self.neutral_sentiment_graph, self.negative_sentiment_graph, self.count_graph
+
+class GraphEvaluator:
+    def __init__(
+        self,
+        simulator,
+        seed=0,
+        algorithm="louvain",
+        resolution=1.0
+    ) -> None:
+
+        self.simulator = simulator
+        self.seed = seed
+        self.algorithm = algorithm
+        self.resolution = resolution
+        self.graph = simulator.count_graph
+        self.communities = None
+        self.df_nodes = None
+        self.df_edges = None
+
+    def __initialize_seed__(self):
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+
+    def set_graph(self, graph):
+        self.graph = graph
+
+    def set_seed(self, seed):
+        self.seed = seed
+
+    def set_algorithm(self, algorithm):
+        self.algorithm = algorithm
+    
+    def __initialize_dataframes__(self):
+        node_df = pd.DataFrame(
+            data={
+                'node':self.simulator.nodes, 
+                'set_community':self.simulator.communities, 
+                'set_label':self.simulator.labels
+            }
+        )
+        community_mapper = {}
+        for enum in enumerate(self.communities):
+            for node in enum[1]:
+                community_mapper[node] = enum[0]
+
+        node_df["detected_community"] = node_df["node"].map(community_mapper)
+
+        edge_df = pd.DataFrame(
+            data={
+                'source_node':self.simulator.source_nodes, 
+                'destination_node':self.simulator.destination_nodes, 
+                'edge_sentiments':self.simulator.edge_sentiments
+            }
+        )
+        edge_df["set_source_community"] = edge_df["source_node"].map(node_df["set_community"])
+        edge_df["set_source_label"] = edge_df["source_node"].map(node_df["set_label"])
+        edge_df["detected_source_community"] = edge_df["source_node"].map(node_df["detected_community"])
+        edge_df["detected_destination_community"] = edge_df["destination_node"].map(node_df["detected_community"])
+
+        self.node_df = node_df
+        self.edge_df = edge_df
+
+    def detect_communities(self, graph=False):
+        if graph:
+            self.set_graph(graph)
+
+        self.__initialize_seed__()
+
+        if self.algorithm == "louvain":
+            # self.communities  = [
+            #     set(community) for community in algorithms.louvain(
+            #         g_original=self.graph.to_undirected(), 
+            #         weight='weight', 
+            #         resolution=self.resolution
+            #         ).communities
+            #         ]
+            self.communities = nx.algorithms.community.louvain_communities(
+                        G=self.graph, 
+                        weight='weight',
+                        resolution=self.resolution, 
+                        seed=self.seed
+                        )
+        elif self.algorithm == "leiden":
+            self.communities  = [
+                set(community) for community in algorithms.louvain(
+                    g_original=self.graph.to_undirected(), 
+                    weight='weight'
+                    ).communities
+                    ]
+        else:
+            raise ValueError(f"Algorithm {self.algorithm} not supported.")
+        
+        self.__initialize_dataframes__()
+
+        return self.communities
+
+    def evaluate_single_community(self, community):
+        # Generate helper dataframes
+        comm_specific_node_df = self.node_df[self.node_df.detected_community == community]
+        comm_specific_edge_df = self.edge_df[self.edge_df.detected_source_community == community]
+        comm_specific_external_edge_df = comm_specific_edge_df[comm_specific_edge_df.detected_destination_community != community]
+        comm_specific_internal_edge_df = comm_specific_edge_df[comm_specific_edge_df.detected_destination_community == community]
+
+        # Evaluate community on generic metrics
+        try:
+            detected_homophily = (
+                comm_specific_node_df.set_label.value_counts().sort_index().iloc[0]
+                / len(comm_specific_node_df)
+            )  # % of the most frequent labels
+        except:
+            detected_homophily = 0  # THERE ARE NO NODES
+        try:
+            detected_isolation = len(comm_specific_internal_edge_df) / len(
+                comm_specific_edge_df
+            )  # % of internal edges (1 - condunctance)
+        except ZeroDivisionError:
+            detected_isolation = 0  # THERE ARE NO EDGES
+        try:
+            detected_insulation = (
+                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[1]
+                / len(comm_specific_external_edge_df)
+            )  # % negative external edges
+        except KeyError:
+            detected_insulation = 0  # THERE ARE NO EXTERNAL EDGES
+        try:
+            detected_affinity = (
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[3]
+                / len(comm_specific_internal_edge_df)
+            )  # % of positive internal edges
+        except KeyError:
+            detected_affinity = 0  # THERE ARE NO INTERNAL EDGES
+        try:
+            detected_purity = (
+                comm_specific_node_df.set_label.value_counts() / len(comm_specific_node_df)
+            ).prod()
+            # product of % of all labels (Similar to `detected_homophily` but looks at all labels)
+        except KeyError:
+            detected_purity = 0  # THERE ARE NO NODES
+        try:
+            detected_conductance = len(comm_specific_external_edge_df) / len(
+                comm_specific_edge_df
+            )  # % of external edges (1 - isolation)
+        except ZeroDivisionError:
+            detected_conductance = 0  # THERE ARE NO EDGES
+        try:
+            detected_equity = (
+                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[2]
+                / len(comm_specific_external_edge_df)
+            )  # % neutral external edges
+        except KeyError:
+            detected_equity = 0  # THERE ARE NO EXTERNAL EDGES
+        try:
+            detected_altruism = (
+                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[3]
+                / len(comm_specific_external_edge_df)
+            )  # % positive external edges
+        except KeyError:
+            detected_altruism = 0  # THERE ARE NO EXTERNAL EDGES
+        try:
+            detected_balance = (
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[2]
+                / len(comm_specific_internal_edge_df)
+            )  # % of neutral internal edges
+        except KeyError:
+            detected_balance = 0  # THERE ARE NO INTERNAL EDGES
+        try:
+            detected_hostility = (
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[1]
+                / len(comm_specific_internal_edge_df)
+            )  # % of negative internal edges
+        except KeyError:
+            detected_hostility = 0  # THERE ARE NO INTERNAL EDGES
+
+        return (
+            detected_homophily,
+            detected_isolation,
+            detected_insulation,
+            detected_affinity,
+            detected_purity,
+            detected_conductance,
+            detected_equity,
+            detected_altruism,
+            detected_balance,
+            detected_hostility,
+            len(comm_specific_node_df),
+            len(comm_specific_edge_df)
+        )
+    
+    def evaluate_all_communities(self):
+        metrics = []
+        for community in self.node_df["detected_community"].unique():
+            community_metrics = self.evaluate_single_community(community)
+            metrics.append(community_metrics)
+
+        metrics_df = pd.DataFrame(
+            data=metrics,
+            columns=[
+                "homophily",
+                "isolation",
+                "insulation",
+                "affinity",
+                "purity",
+                "conductance",
+                "equity",
+                "altruism",
+                "balance",
+                "hostility",
+                "num_nodes",
+                "num_edges",
+            ],
+        )
+
+        return metrics_df
 
 
 if __name__ == "__main__":
