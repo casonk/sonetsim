@@ -18,6 +18,7 @@ Module Functions:
     Run a simulation of a social network.
 
 """
+
 # IMPORTS
 ## Standard Libraries
 import random
@@ -190,8 +191,8 @@ def initialize_graphs(
     # Add edges to graphs
     for u, v, s in zip(source_nodes, destination_nodes, edge_sentiments):
         positive_sentiment_graph.add_edge(u, v, weight=s)
-        neutral_sentiment_graph.add_edge(u, v, weight=2-np.abs(2-s))
-        negative_sentiment_graph.add_edge(u, v, weight=4-s)
+        neutral_sentiment_graph.add_edge(u, v, weight=2 - np.abs(2 - s))
+        negative_sentiment_graph.add_edge(u, v, weight=4 - s)
         count_graph.add_edge(u, v, weight=1)
 
     return (
@@ -216,13 +217,13 @@ def simulation(
     Run a simulation of a social network.
 
     Parameters:
-    - homophily (float or array-like of floats): Homophily parameter(s) for each community. 
+    - homophily (float or array-like of floats): Homophily parameter(s) for each community.
     -- Must be between 0 and 1.
-    - isolation (float or array-like of floats): Isolation parameter(s) for each community. 
+    - isolation (float or array-like of floats): Isolation parameter(s) for each community.
     -- Must be between 0 and 1.
-    - insulation (float or array-like of floats): Insulation parameter(s) for each community. 
+    - insulation (float or array-like of floats): Insulation parameter(s) for each community.
     -- Must be between 0 and 1.
-    - affinity (float or array-like of floats): Affinity parameter(s) for each community. 
+    - affinity (float or array-like of floats): Affinity parameter(s) for each community.
     -- Must be between 0 and 1.
     - num_nodes (int): Number of nodes in the network.
     - num_edges (int): Number of edges in the network.
@@ -269,7 +270,7 @@ def simulation(
         else:
             try:
                 param = np.array(param)
-            except TypeError  as exc:
+            except TypeError as exc:
                 raise TypeError(
                     f"Parameter {param} must be a float or array-like of floats."
                 ) from exc
@@ -367,13 +368,13 @@ def initialize_evaluation_dictionaries():
     Initializes the evaluation dictionaries for sentiment analysis.
 
     Returns:
-        - positive_sentiment_graph_comms (dict): 
+        - positive_sentiment_graph_comms (dict):
         -- A dictionary to store positive sentiment graph communities.
-        - neutral_sentiment_graph_comms (dict): 
+        - neutral_sentiment_graph_comms (dict):
         -- A dictionary to store neutral sentiment graph communities.
-        - negative_sentiment_graph_comms (dict): 
+        - negative_sentiment_graph_comms (dict):
         -- A dictionary to store negative sentiment graph communities.
-        - count_graph_comms (dict): 
+        - count_graph_comms (dict):
         -- A dictionary to store the count of graph communities.
     """
 
@@ -602,9 +603,7 @@ def evaluate_communities_parallel(
 
     # Resolve graph independent node attributes
     nodes = np.array(list(count_graph.nodes()))
-    labels = np.array(
-        list(nx.get_node_attributes(count_graph, "label").values())
-    )
+    labels = np.array(list(nx.get_node_attributes(count_graph, "label").values()))
     communities = np.array(
         list(nx.get_node_attributes(count_graph, "community").values())
     )
@@ -975,27 +974,27 @@ def simulate_and_evaluate_parallel(
     Simulates a social network and evaluates the communities using multiple algorithms in parallel.
 
     Parameters:
-    - homophily (float): 
+    - homophily (float):
     -- The degree of similarity between connected nodes in terms of their attributes.
-    - isolation (float): 
+    - isolation (float):
     -- The tendency of nodes to form connections within their own community.
-    - insulation (float): 
+    - insulation (float):
     -- The tendency of nodes to avoid connections outside their own community.
-    - affinity (float): 
+    - affinity (float):
     -- The overall attraction between nodes in the network.
-    - num_nodes (int): 
+    - num_nodes (int):
     -- The number of nodes in the network.
-    - num_edges (int): 
+    - num_edges (int):
     -- The number of edges in the network.
-    - num_communities (int): 
+    - num_communities (int):
     -- The number of communities to be formed in the network.
-    - resolution (int): 
+    - resolution (int):
     -- The resolution parameter used by the community detection algorithms.
-    - seed (int): 
+    - seed (int):
     -- The random seed used for generating the network.
 
     Returns:
-    - eval_df (DataFrame): 
+    - eval_df (DataFrame):
     -- A DataFrame containing the evaluation results for each community detection algorithm.
     """
 
@@ -1057,23 +1056,23 @@ def evaluate_communities_serial(
     Evaluate communities in a serial manner.
 
     Args:
-        - positive_sentiment_graph (networkx.Graph): 
+        - positive_sentiment_graph (networkx.Graph):
         -- Graph representing positive sentiment.
-        - neutral_sentiment_graph (networkx.Graph): 
+        - neutral_sentiment_graph (networkx.Graph):
         -- Graph representing neutral sentiment.
-        - negative_sentiment_graph (networkx.Graph): 
+        - negative_sentiment_graph (networkx.Graph):
         -- Graph representing negative sentiment.
-        - count_graph (networkx.Graph): 
+        - count_graph (networkx.Graph):
         -- Graph representing count.
-        - seed (int, optional): 
+        - seed (int, optional):
         -- Seed value for random number generator. Defaults to 0.
-        - resolution (int, optional): 
+        - resolution (int, optional):
         -- Resolution parameter for the Leiden algorithm. Defaults to 1.
-        - algos (list, optional): 
+        - algos (list, optional):
         -- List of algorithms to use for community detection. Defaults to ['infomap'].
 
     Returns:
-        - pandas.DataFrame: 
+        - pandas.DataFrame:
         -- DataFrame containing evaluation results for each community.
     """
 
@@ -1104,9 +1103,7 @@ def evaluate_communities_serial(
 
     # Resolve graph independent node attributes
     nodes = np.array(list(count_graph.nodes()))
-    labels = np.array(
-        list(nx.get_node_attributes(count_graph, "label").values())
-    )
+    labels = np.array(list(nx.get_node_attributes(count_graph, "label").values()))
     communities = np.array(
         list(nx.get_node_attributes(count_graph, "community").values())
     )
@@ -1389,27 +1386,27 @@ def simulate_and_evaluate_serial(
       using various algorithms in a serial manner.
 
     Parameters:
-    - homophily (float): 
+    - homophily (float):
     -- The probability of two nodes being connected based on their similarity.
-    - isolation (float): 
+    - isolation (float):
     -- The probability of a node being isolated from the rest of the network.
-    - insulation (float): 
+    - insulation (float):
     -- The probability of a node forming connections outside its community.
-    - affinity (float): 
+    - affinity (float):
     -- The probability of a node forming connections within its community.
-    - num_nodes (int): 
+    - num_nodes (int):
     -- The number of nodes in the network.
-    - num_edges (int): 
+    - num_edges (int):
     -- The number of edges in the network.
-    - num_communities (int): 
+    - num_communities (int):
     -- The number of communities in the network.
-    - resolution (int): 
+    - resolution (int):
     -- The resolution parameter used by the community detection algorithms.
-    - seed (int): 
+    - seed (int):
     -- The random seed used for reproducibility.
 
     Returns:
-    - eval_df (DataFrame): 
+    - eval_df (DataFrame):
     -- A DataFrame containing the evaluation results for each community detection algorithm.
     """
 

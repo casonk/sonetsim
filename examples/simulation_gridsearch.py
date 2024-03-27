@@ -5,9 +5,11 @@ import os
 
 num_logical_processors = mp.cpu_count()
 
+
 def set_num_logical_processors(n):
     global num_logical_processors
     num_logical_processors = n
+
 
 homophilies = [x / 4 for x in range(1, 5)]
 isolations = [x / 4 for x in range(1, 5)]
@@ -40,6 +42,7 @@ def create_simulation_and_evaluation_grid_search(seed):
                                 #         seed
                                 #     ])
     return grid_search
+
 
 index_cols = [
     "algorithm",
