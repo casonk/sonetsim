@@ -19,6 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Analysing the code with pylint
       run: |
         python -m pylint --fail-under=10 `find -regextype egrep -regex '(.*.py)$'` |
