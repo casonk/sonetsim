@@ -20,7 +20,7 @@ class GraphSimulator:
         isolation=0.5,
         insulation=0.5,
         affinity=0.5,
-        seed=0
+        seed=0,
     ) -> None:
 
         # Set graph static parameters
@@ -47,12 +47,12 @@ class GraphSimulator:
                         f"Parameter {param} must be a float or array-like of floats."
                     ) from exc
             return param
-        
+
         # Set graph simulation parameters
-        self.homophily  = __check_param__(homophily)
-        self.isolation  = __check_param__(isolation)
+        self.homophily = __check_param__(homophily)
+        self.isolation = __check_param__(isolation)
         self.insulation = __check_param__(insulation)
-        self.affinity   = __check_param__(affinity)
+        self.affinity = __check_param__(affinity)
 
         self.seed = seed
         self.nodes = None
@@ -181,16 +181,16 @@ class GraphSimulator:
         self.__initialize_graph_data__()
         self.__initialize_graphs__()
 
-        return self.positive_sentiment_graph, self.neutral_sentiment_graph, self.negative_sentiment_graph, self.count_graph
+        return (
+            self.positive_sentiment_graph,
+            self.neutral_sentiment_graph,
+            self.negative_sentiment_graph,
+            self.count_graph,
+        )
+
 
 class GraphEvaluator:
-    def __init__(
-        self,
-        simulator,
-        seed=0,
-        algorithm="louvain",
-        resolution=1.0
-    ) -> None:
+    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0) -> None:
 
         self.simulator = simulator
         self.seed = seed
@@ -213,13 +213,13 @@ class GraphEvaluator:
 
     def set_algorithm(self, algorithm):
         self.algorithm = algorithm
-    
+
     def __initialize_dataframes__(self):
         node_df = pd.DataFrame(
             data={
-                'node':self.simulator.nodes, 
-                'set_community':self.simulator.communities, 
-                'set_label':self.simulator.labels
+                "node": self.simulator.nodes,
+                "set_community": self.simulator.communities,
+                "set_label": self.simulator.labels,
             }
         )
         community_mapper = {}
@@ -231,15 +231,21 @@ class GraphEvaluator:
 
         edge_df = pd.DataFrame(
             data={
-                'source_node':self.simulator.source_nodes, 
-                'destination_node':self.simulator.destination_nodes, 
-                'edge_sentiments':self.simulator.edge_sentiments
+                "source_node": self.simulator.source_nodes,
+                "destination_node": self.simulator.destination_nodes,
+                "edge_sentiments": self.simulator.edge_sentiments,
             }
         )
-        edge_df["set_source_community"] = edge_df["source_node"].map(node_df["set_community"])
+        edge_df["set_source_community"] = edge_df["source_node"].map(
+            node_df["set_community"]
+        )
         edge_df["set_source_label"] = edge_df["source_node"].map(node_df["set_label"])
-        edge_df["detected_source_community"] = edge_df["source_node"].map(node_df["detected_community"])
-        edge_df["detected_destination_community"] = edge_df["destination_node"].map(node_df["detected_community"])
+        edge_df["detected_source_community"] = edge_df["source_node"].map(
+            node_df["detected_community"]
+        )
+        edge_df["detected_destination_community"] = edge_df["destination_node"].map(
+            node_df["detected_community"]
+        )
 
         self.node_df = node_df
         self.edge_df = edge_df
@@ -253,37 +259,45 @@ class GraphEvaluator:
         if self.algorithm == "louvain":
             # self.communities  = [
             #     set(community) for community in algorithms.louvain(
-            #         g_original=self.graph.to_undirected(), 
-            #         weight='weight', 
+            #         g_original=self.graph.to_undirected(),
+            #         weight='weight',
             #         resolution=self.resolution
             #         ).communities
             #         ]
             self.communities = nx.algorithms.community.louvain_communities(
-                        G=self.graph, 
-                        weight='weight',
-                        resolution=self.resolution, 
-                        seed=self.seed
-                        )
+                G=self.graph,
+                weight="weight",
+                resolution=self.resolution,
+                seed=self.seed,
+            )
         elif self.algorithm == "leiden":
-            self.communities  = [
-                set(community) for community in algorithms.louvain(
-                    g_original=self.graph.to_undirected(), 
-                    weight='weight'
-                    ).communities
-                    ]
+            self.communities = [
+                set(community)
+                for community in algorithms.louvain(
+                    g_original=self.graph.to_undirected(), weight="weight"
+                ).communities
+            ]
         else:
             raise ValueError(f"Algorithm {self.algorithm} not supported.")
-        
+
         self.__initialize_dataframes__()
 
         return self.communities
 
     def evaluate_single_community(self, community):
         # Generate helper dataframes
-        comm_specific_node_df = self.node_df[self.node_df.detected_community == community]
-        comm_specific_edge_df = self.edge_df[self.edge_df.detected_source_community == community]
-        comm_specific_external_edge_df = comm_specific_edge_df[comm_specific_edge_df.detected_destination_community != community]
-        comm_specific_internal_edge_df = comm_specific_edge_df[comm_specific_edge_df.detected_destination_community == community]
+        comm_specific_node_df = self.node_df[
+            self.node_df.detected_community == community
+        ]
+        comm_specific_edge_df = self.edge_df[
+            self.edge_df.detected_source_community == community
+        ]
+        comm_specific_external_edge_df = comm_specific_edge_df[
+            comm_specific_edge_df.detected_destination_community != community
+        ]
+        comm_specific_internal_edge_df = comm_specific_edge_df[
+            comm_specific_edge_df.detected_destination_community == community
+        ]
 
         # Evaluate community on generic metrics
         try:
@@ -315,7 +329,8 @@ class GraphEvaluator:
             detected_affinity = 0  # THERE ARE NO INTERNAL EDGES
         try:
             detected_purity = (
-                comm_specific_node_df.set_label.value_counts() / len(comm_specific_node_df)
+                comm_specific_node_df.set_label.value_counts()
+                / len(comm_specific_node_df)
             ).prod()
             # product of % of all labels (Similar to `detected_homophily` but looks at all labels)
         except KeyError:
@@ -367,9 +382,9 @@ class GraphEvaluator:
             detected_balance,
             detected_hostility,
             len(comm_specific_node_df),
-            len(comm_specific_edge_df)
+            len(comm_specific_edge_df),
         )
-    
+
     def evaluate_all_communities(self):
         metrics = []
         for community in self.node_df["detected_community"].unique():
