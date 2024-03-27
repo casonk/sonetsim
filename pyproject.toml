@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sonetsim"
-version = "0.0.0"
+version = "0.0.1"
 description = "A library for (so)cial (net)work (sim)ulation."
 authors = ["ksan <casonk@umich.edu>"]
 license = "LGPL"
