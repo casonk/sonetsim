@@ -32,4 +32,4 @@ jobs:
     - name: Run the test cases
       run: |
         ls
-        pytest -v sonetsim/simulator_validator.py
+        pytest -v sonetsim/tests/simulator_validator.py
