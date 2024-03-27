@@ -1,40 +1,53 @@
 import pytest
 from sonetsim.sonetsim import GraphSimulator
-
+import numpy as np
 
 @pytest.fixture
-def validator():
+def default_validator1():
     return GraphSimulator()
 
-def test__num_nodes(validator):
-    assert validator.num_nodes > 0, "Number of nodes must be greater than 0"
+@pytest.fixture
+def default_validator2():
+    return GraphSimulator()
 
-def test__num_edges(validator):
-    assert validator.num_edges > 0, "Number of edges must be greater than 0"
+def test__default_init(default_validator1):
+    assert default_validator1.num_nodes == 10, "Number of nodes must default to 10"
+    assert default_validator1.num_edges == 50, "Number of edges must default to 50"
+    assert default_validator1.num_communities == 2, "Number of communities must default to 2"
+    assert (default_validator1.homophily == np.array([0.5, 0.5])).all(), "Homophily must default to np.array([0.5, 0.5])"
+    assert (default_validator1.isolation == np.array([0.5, 0.5])).all(), "Isolation must default to np.array([0.5, 0.5])"
+    assert (default_validator1.insulation == np.array([0.5, 0.5])).all(), "Insulation must default to np.array([0.5, 0.5])"
+    assert (default_validator1.affinity == np.array([0.5, 0.5])).all(), "Affinity must default to np.array([0.5, 0.5])"
+    assert default_validator1.seed == 0, "Seed must be default to 0"
+    assert default_validator1.nodes is None, "Nodes must be None"
+    assert default_validator1.communities is None, "Communities must be None"
+    assert default_validator1.labels is None, "Labels must be None"
+    assert default_validator1.source_nodes is None, "Source nodes must be None"
+    assert default_validator1.source_communities is None, "Source communities must be None"
+    assert default_validator1.destination_communities is None, "Destination communities must be None"
+    assert default_validator1.destination_nodes is None, "Destination nodes must be None"
+    assert default_validator1.edge_sentiments is None, "Edge sentiments must be None"
+    assert default_validator1.positive_sentiment_graph is None, "Positive sentiment graph must be None"
+    assert default_validator1.neutral_sentiment_graph is None, "Neutral sentiment graph must be None"
+    assert default_validator1.negative_sentiment_graph is None, "Negative sentiment graph must be None"
+    assert default_validator1.count_graph is None, "Count graph must be None"
+    assert default_validator1.nodes is None, "Nodes must be None"
+    assert default_validator1.communities is None, "Communities must be None"
+    assert default_validator1.labels is None, "Labels must be None"
+    assert default_validator1.source_nodes is None, "Source nodes must be None"
+    assert default_validator1.source_communities is None, "Source communities must be None"
+    assert default_validator1.destination_communities is None, "Destination communities must be None"
+    assert default_validator1.destination_nodes is None, "Destination nodes must be None"
 
+def test__seeding(default_validator1, default_validator2):
+    posG1, neuG1, negG1, cntG1 = default_validator1.simulate()
+    posG2, neuG2, negG2, cntG2 = default_validator2.simulate()
+    assert posG1.nodes() == posG2.nodes(), "Nodes must be the same"
+    assert neuG1.nodes() == neuG2.nodes(), "Nodes must be the same"
+    assert negG1.nodes() == negG2.nodes(), "Nodes must be the same"
+    assert cntG1.nodes() == cntG2.nodes(), "Nodes must be the same"
+    assert posG1.edges() == posG2.edges(), "Edges must be the same"
+    assert neuG1.edges() == neuG2.edges(), "Edges must be the same"
+    assert negG1.edges() == negG2.edges(), "Edges must be the same"
+    assert cntG1.edges() == cntG2.edges(), "Edges must be the same"
 
-    # assert validator.num_communities > 0, "Number of communities must be greater than 0"
-    # assert validator.homophily >= 0 and validator.homophily <= 1, "Parameter homophily must be between 0 and 1"
-    # assert validator.isolation >= 0 and validator.isolation <= 1, "Parameter isolation must be between 0 and 1"
-    # assert validator.insulation >= 0 and validator.insulation <= 1, "Parameter insulation must be between 0 and 1"
-    # assert validator.affinity >= 0 and validator.affinity <= 1, "Parameter affinity must be between 0 and 1"
-    # assert validator.seed >= 0, "Seed must be greater than or equal to 0"
-    # assert validator.nodes is None, "Nodes must be None"
-    # assert validator.communities is None, "Communities must be None"
-    # assert validator.labels is None, "Labels must be None"
-    # assert validator.source_nodes is None, "Source nodes must be None"
-    # assert validator.source_communities is None, "Source communities must be None"
-    # assert validator.destination_communities is None, "Destination communities must be None"
-    # assert validator.destination_nodes is None, "Destination nodes must be None"
-    # assert validator.edge_sentiments is None, "Edge sentiments must be None"
-    # assert validator.positive_sentiment_graph is None, "Positive sentiment graph must be None"
-    # assert validator.neutral_sentiment_graph is None, "Neutral sentiment graph must be None"
-    # assert validator.negative_sentiment_graph is None, "Negative sentiment graph must be None"
-    # assert validator.count_graph is None, "Count graph must be None"
-    # assert validator.nodes is None, "Nodes must be None"
-    # assert validator.communities is None, "Communities must be None"
-    # assert validator.labels is None, "Labels must be None"
-    # assert validator.source_nodes is None, "Source nodes must be None"
-    # assert validator.source_communities is None, "Source communities must be None"
-    # assert validator.destination_communities is None, "Destination communities must be None"
-    # assert validator.destination_nodes is None, "Destination nodes must be None"

@@ -23,13 +23,37 @@ class GraphSimulator:
         seed=0
     ) -> None:
 
+        # Set graph static parameters
         self.num_nodes = num_nodes
         self.num_edges = num_edges
         self.num_communities = num_communities
-        self.homophily = homophily
-        self.isolation = isolation
-        self.insulation = insulation
-        self.affinity = affinity
+
+        # Check graph static parameters
+        assert self.num_nodes > 0, "Number of nodes must be greater than 0"
+        assert self.num_edges > 0, "Number of edges must be greater than 0"
+        assert self.num_communities > 0, "Number of communities must be greater than 0"
+
+        # Function to check & update simulation parameters
+        def __check_param__(self, param):
+            if type(param) in [int, float]:
+                if param < 0 or param > 1:
+                    raise ValueError(f"Parameter {param} must be between 0 and 1.")
+                param = np.array([param for _ in range(num_communities)])
+            else:
+                try:
+                    param = np.array(param)
+                except TypeError as exc:
+                    raise TypeError(
+                        f"Parameter {param} must be a float or array-like of floats."
+                    ) from exc
+            return param
+        
+        # Set graph simulation parameters
+        self.homophily  = __check_param__(self, homophily)
+        self.isolation  = __check_param__(self, homophily)
+        self.insulation = __check_param__(self, homophily)
+        self.affinity   = __check_param__(self, homophily)
+
         self.seed = seed
         self.nodes = None
         self.communities = None
@@ -44,23 +68,7 @@ class GraphSimulator:
         self.negative_sentiment_graph = None
         self.count_graph = None
 
-        assert self.num_nodes > 0, "Number of nodes must be greater than 0"
-        assert self.num_edges > 0, "Number of edges must be greater than 0"
-        assert self.num_communities > 0, "Number of communities must be greater than 0"
-
-        for param in [self.homophily, self.isolation, self.insulation, self.affinity]:
-            if type(param) in [int, float]:
-                if param < 0 or param > 1:
-                    raise ValueError(f"Parameter {param} must be between 0 and 1.")
-                param = np.array([param for _ in range(num_communities)])
-            else:
-                try:
-                    param = np.array(param)
-                except TypeError as exc:
-                    raise TypeError(
-                        f"Parameter {param} must be a float or array-like of floats."
-                    ) from exc
-   
+    def __initialize_seed__(self):
         random.seed(self.seed)
         np.random.seed(self.seed)
 
@@ -169,8 +177,11 @@ class GraphSimulator:
             self.count_graph.add_edge(u, v, weight=1)
 
     def simulate(self):
+        self.__initialize_seed__()
         self.__initialize_graph_data__()
         self.__initialize_graphs__()
+
+        return self.positive_sentiment_graph, self.neutral_sentiment_graph, self.negative_sentiment_graph, self.count_graph
 
 
 if __name__ == "__main__":
