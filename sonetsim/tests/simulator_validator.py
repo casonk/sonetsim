@@ -1,6 +1,6 @@
 import pytest
-from sonetsim.sonetsim import GraphSimulator
 import numpy as np
+from sonetsim.sonetsim import GraphSimulator
 
 
 @pytest.fixture
@@ -158,58 +158,58 @@ def test__custom_init(custom_validator1):
 
 
 def test__default_seeding(default_validator1, default_validator2):
-    posG1, neuG1, negG1, cntG1 = default_validator1.simulate()
-    posG2, neuG2, negG2, cntG2 = default_validator2.simulate()
+    pos_g1, neu_g1, neg_g1, cnt_g1 = default_validator1.simulate()
+    pos_g2, neu_g2, neg_g2, cnt_g2 = default_validator2.simulate()
     assert (
-        posG1.nodes() == posG2.nodes()
+        pos_g1.nodes() == pos_g2.nodes()
     ), "Nodes must be the same for positive sentiment graphs"
     assert (
-        neuG1.nodes() == neuG2.nodes()
+        neu_g1.nodes() == neu_g2.nodes()
     ), "Nodes must be the same for neutral sentiment graphs"
     assert (
-        negG1.nodes() == negG2.nodes()
+        neg_g1.nodes() == neg_g2.nodes()
     ), "Nodes must be the same for negative sentiment graphs"
     assert (
-        cntG1.nodes() == cntG2.nodes()
+        cnt_g1.nodes() == cnt_g2.nodes()
     ), "Nodes must be the same for edge count graphs"
     assert (
-        posG1.edges() == posG2.edges()
+        pos_g1.edges() == pos_g2.edges()
     ), "Edges must be the same for positive sentiment graphs"
     assert (
-        neuG1.edges() == neuG2.edges()
+        neu_g1.edges() == neu_g2.edges()
     ), "Edges must be the same for neutral sentiment graphs"
     assert (
-        negG1.edges() == negG2.edges()
+        neg_g1.edges() == neg_g2.edges()
     ), "Edges must be the same for negative sentiment graphs"
     assert (
-        cntG1.edges() == cntG2.edges()
+        cnt_g1.edges() == cnt_g2.edges()
     ), "Edges must be the same for edge count graphs"
 
 
 def test__custom_seeding(custom_validator1, custom_validator2):
-    posG1, neuG1, negG1, cntG1 = custom_validator1.simulate()
-    posG2, neuG2, negG2, cntG2 = custom_validator2.simulate()
+    pos_g1, neu_g1, neg_g1, cnt_g1 = custom_validator1.simulate()
+    pos_g2, neu_g2, neg_g2, cnt_g2 = custom_validator2.simulate()
     assert (
-        posG1.nodes() == posG2.nodes()
+        pos_g1.nodes() == pos_g2.nodes()
     ), "Nodes must be the same for positive sentiment graphs"
     assert (
-        neuG1.nodes() == neuG2.nodes()
+        neu_g1.nodes() == neu_g2.nodes()
     ), "Nodes must be the same for neutral sentiment graphs"
     assert (
-        negG1.nodes() == negG2.nodes()
+        neg_g1.nodes() == neg_g2.nodes()
     ), "Nodes must be the same for negative sentiment graphs"
     assert (
-        cntG1.nodes() == cntG2.nodes()
+        cnt_g1.nodes() == cnt_g2.nodes()
     ), "Nodes must be the same for edge count graphs"
     assert (
-        posG1.edges() == posG2.edges()
+        pos_g1.edges() == pos_g2.edges()
     ), "Edges must be the same for positive sentiment graphs"
     assert (
-        neuG1.edges() == neuG2.edges()
+        neu_g1.edges() == neu_g2.edges()
     ), "Edges must be the same for neutral sentiment graphs"
     assert (
-        negG1.edges() == negG2.edges()
+        neg_g1.edges() == neg_g2.edges()
     ), "Edges must be the same for negative sentiment graphs"
     assert (
-        cntG1.edges() == cntG2.edges()
+        cnt_g1.edges() == cnt_g2.edges()
     ), "Edges must be the same for edge count graphs"

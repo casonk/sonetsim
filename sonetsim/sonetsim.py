@@ -198,8 +198,8 @@ class GraphEvaluator:
         self.resolution = resolution
         self.graph = simulator.count_graph
         self.communities = None
-        self.df_nodes = None
-        self.df_edges = None
+        self.node_df = None
+        self.edge_df = None
 
     def __initialize_seed__(self):
         random.seed(self.seed)
