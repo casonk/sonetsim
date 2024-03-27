@@ -30,4 +30,4 @@ jobs:
         path: pylint.txt
     - name: Run the test cases
       run: |
-        pytest -v ./tests/simulator_validator.py
+        pytest -v
