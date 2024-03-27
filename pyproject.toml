@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "sonet-sim"
+name = "sonetsim"
 version = "0.0.0"
 description = "A library for (so)cial (net)work (sim)ulation."
 authors = ["ksan <casonk@umich.edu>"]
