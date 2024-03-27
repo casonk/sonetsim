@@ -73,7 +73,7 @@ def test__custom_init(custom_validator1):
     assert (custom_validator1.isolation == np.array([0.65 for _ in range(custom_validator1.num_communities)])).all(), "Isolation must default to np.array of size num_communities and input isolation value"
     assert (custom_validator1.insulation == np.array([0.55 for _ in range(custom_validator1.num_communities)])).all(), "Insulation must default to np.array of size num_communities and input insulation value"
     assert (custom_validator1.affinity == np.array([0.45 for _ in range(custom_validator1.num_communities)])).all(), "Affinity must default to np.array of size num_communities and input affinity value"
-    assert custom_validator1.seed == 0, "Seed must be default to 0"
+    assert custom_validator1.seed == 1, "Seed must be set to input seed value"
     assert custom_validator1.nodes is None, "Nodes must be None"
     assert custom_validator1.communities is None, "Communities must be None"
     assert custom_validator1.labels is None, "Labels must be None"
@@ -97,23 +97,23 @@ def test__custom_init(custom_validator1):
 def test__default_seeding(default_validator1, default_validator2):
     posG1, neuG1, negG1, cntG1 = default_validator1.simulate()
     posG2, neuG2, negG2, cntG2 = default_validator2.simulate()
-    assert posG1.nodes() == posG2.nodes(), "Nodes must be the same"
-    assert neuG1.nodes() == neuG2.nodes(), "Nodes must be the same"
-    assert negG1.nodes() == negG2.nodes(), "Nodes must be the same"
-    assert cntG1.nodes() == cntG2.nodes(), "Nodes must be the same"
-    assert posG1.edges() == posG2.edges(), "Edges must be the same"
-    assert neuG1.edges() == neuG2.edges(), "Edges must be the same"
-    assert negG1.edges() == negG2.edges(), "Edges must be the same"
-    assert cntG1.edges() == cntG2.edges(), "Edges must be the same"
+    assert posG1.nodes() == posG2.nodes(), "Nodes must be the same for positive sentiment graphs"
+    assert neuG1.nodes() == neuG2.nodes(), "Nodes must be the same for neutral sentiment graphs"
+    assert negG1.nodes() == negG2.nodes(), "Nodes must be the same for negative sentiment graphs"
+    assert cntG1.nodes() == cntG2.nodes(), "Nodes must be the same for edge count graphs"
+    assert posG1.edges() == posG2.edges(), "Edges must be the same for positive sentiment graphs"
+    assert neuG1.edges() == neuG2.edges(), "Edges must be the same for neutral sentiment graphs"
+    assert negG1.edges() == negG2.edges(), "Edges must be the same for negative sentiment graphs"
+    assert cntG1.edges() == cntG2.edges(), "Edges must be the same for edge count graphs"
 
 def test__custom_seeding(custom_validator1, custom_validator2):
     posG1, neuG1, negG1, cntG1 = custom_validator1.simulate()
     posG2, neuG2, negG2, cntG2 = custom_validator2.simulate()
-    assert posG1.nodes() == posG2.nodes(), "Nodes must be the same"
-    assert neuG1.nodes() == neuG2.nodes(), "Nodes must be the same"
-    assert negG1.nodes() == negG2.nodes(), "Nodes must be the same"
-    assert cntG1.nodes() == cntG2.nodes(), "Nodes must be the same"
-    assert posG1.edges() == posG2.edges(), "Edges must be the same"
-    assert neuG1.edges() == neuG2.edges(), "Edges must be the same"
-    assert negG1.edges() == negG2.edges(), "Edges must be the same"
-    assert cntG1.edges() == cntG2.edges(), "Edges must be the same"
+    assert posG1.nodes() == posG2.nodes(), "Nodes must be the same for positive sentiment graphs"
+    assert neuG1.nodes() == neuG2.nodes(), "Nodes must be the same for neutral sentiment graphs"
+    assert negG1.nodes() == negG2.nodes(), "Nodes must be the same for negative sentiment graphs"
+    assert cntG1.nodes() == cntG2.nodes(), "Nodes must be the same for edge count graphs"
+    assert posG1.edges() == posG2.edges(), "Edges must be the same for positive sentiment graphs"
+    assert neuG1.edges() == neuG2.edges(), "Edges must be the same for neutral sentiment graphs"
+    assert negG1.edges() == negG2.edges(), "Edges must be the same for negative sentiment graphs"
+    assert cntG1.edges() == cntG2.edges(), "Edges must be the same for edge count graphs"
