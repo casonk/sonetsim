@@ -212,15 +212,21 @@ def test__custom_init(custom_validator1):
     assert (
         custom_validator1.homophily
         == np.array([0.75 for _ in range(custom_validator1.num_communities)])
-    ).all(), "Homophily must default to np.array of size num_communities and input value"
+    ).all(), (
+        "Homophily must default to np.array of size num_communities and input value"
+    )
     assert (
         custom_validator1.isolation
         == np.array([0.65 for _ in range(custom_validator1.num_communities)])
-    ).all(), "Isolation must default to np.array of size num_communities and input value"
+    ).all(), (
+        "Isolation must default to np.array of size num_communities and input value"
+    )
     assert (
         custom_validator1.insulation
         == np.array([0.55 for _ in range(custom_validator1.num_communities)])
-    ).all(), "Insulation must default to np.array of size num_communities and input value"
+    ).all(), (
+        "Insulation must default to np.array of size num_communities and input value"
+    )
     assert (
         custom_validator1.affinity
         == np.array([0.45 for _ in range(custom_validator1.num_communities)])
