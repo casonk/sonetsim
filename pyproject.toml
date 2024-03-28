@@ -14,6 +14,9 @@ leidenalg = "^0.10.1"
 wurlitzer = "^3.0.3"
 infomap = "^2.7.1"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
