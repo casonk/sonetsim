@@ -313,7 +313,7 @@ def test__custom_seeding(custom_validator1, custom_validator2):
         custom_validator2: The second custom validator object.
 
     Raises:
-        AssertionError: If the nodes or edges of the sentiment graphs 
+        AssertionError: If the nodes or edges of the sentiment graphs
         or edge count graphs are not the same.
 
     Returns:
@@ -350,7 +350,7 @@ def test__custom_seeding(custom_validator1, custom_validator2):
 @pytest.fixture
 def default_evaluator1(default_validator1):
     """
-    This function takes a `default_validator1` object, 
+    This function takes a `default_validator1` object,
     simulates it, and returns a `GraphEvaluator` object.
 
     Parameters:
