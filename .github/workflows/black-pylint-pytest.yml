@@ -1,6 +1,6 @@
-name: Pylint-Pytest
+name: Black-Pylint-Pytest
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
