@@ -214,12 +214,12 @@ def test__custom_seeding(custom_validator1, custom_validator2):
     ), "Edges must be the same for edge count graphs"
 
 @pytest.fixture
-def default_evaluator1():
-    return GraphEvaluator(simulator=default_validator1().simulate())
+def default_evaluator1(default_validator1):
+    return GraphEvaluator(simulator=default_validator1.simulate())
 
 @pytest.fixture
-def default_evaluator2():
-    return GraphEvaluator(simulator=default_validator2().simulate())
+def default_evaluator2(default_validator2):
+    return GraphEvaluator(simulator=default_validator2.simulate())
 
 def test__default_metrics__count(default_evaluator1):
     default_evaluator1.evaluate(graph="count")
