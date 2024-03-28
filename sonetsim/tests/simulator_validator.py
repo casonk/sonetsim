@@ -1,11 +1,15 @@
 """
 This module contains unit tests for the `GraphSimulator` and `GraphEvaluator` classes in the `sonetsim` package.
 
-The tests cover the default initialization of the `GraphSimulator` class, custom initialization of the `GraphSimulator` class, default seeding, custom seeding, and default metrics evaluation.
+The tests cover the default initialization of the `GraphSimulator` class, 
+custom initialization of the `GraphSimulator` class, 
+default seeding, custom seeding, and default metrics evaluation.
 
-The `GraphSimulator` class is responsible for simulating graph data with different configurations, while the `GraphEvaluator` class is responsible for evaluating the metrics of the simulated graphs.
+The `GraphSimulator` class is responsible for simulating graph data with different configurations, 
+while the `GraphEvaluator` class is responsible for evaluating the metrics of the simulated graphs.
 
-The unit tests ensure that the `GraphSimulator` and `GraphEvaluator` classes are functioning correctly by asserting the expected values of various attributes and metrics.
+The unit tests ensure that the `GraphSimulator` and `GraphEvaluator` classes 
+are functioning correctly by asserting the expected values of various attributes and metrics.
 
 Note: This module requires the `pytest` and `numpy` packages to run the tests.
 """
@@ -18,16 +22,38 @@ from sonetsim.sonetsim import GraphEvaluator
 
 @pytest.fixture
 def default_validator1():
+    """
+    This function returns an instance of the GraphSimulator class.
+    
+    Returns:
+        GraphSimulator: An instance of the GraphSimulator class.
+    """
     return GraphSimulator()
 
 
 @pytest.fixture
 def default_validator2():
+    """
+    Returns an instance of GraphSimulator.
+
+    This function serves as a default validator for the simulator. It creates and returns
+    an instance of the GraphSimulator class.
+
+    Returns:
+        GraphSimulator: An instance of the GraphSimulator class.
+
+    """
     return GraphSimulator()
 
 
 @pytest.fixture
 def custom_validator1():
+    """
+    This function creates and returns a GraphSimulator object with custom parameters.
+
+    Returns:
+        GraphSimulator: A GraphSimulator object with the specified parameters.
+    """
     return GraphSimulator(
         num_nodes=100,
         num_edges=1000,
@@ -42,6 +68,16 @@ def custom_validator1():
 
 @pytest.fixture
 def custom_validator2():
+    """
+    Returns a GraphSimulator object with custom parameters.
+
+    This function creates a GraphSimulator object with custom parameters for simulation.
+    The GraphSimulator simulates a graph with a specified number of nodes, edges, communities,
+    and various other parameters.
+
+    Returns:
+        GraphSimulator: A GraphSimulator object with custom parameters.
+    """
     return GraphSimulator(
         num_nodes=100,
         num_edges=1000,
@@ -58,7 +94,8 @@ def test__default_init(default_validator1):
     """
     Test case for the default initialization of the `default_validator1` object.
 
-    This test case checks that the `default_validator1` object is correctly initialized with the default values.
+    This test case checks that the `default_validator1` object 
+    is correctly initialized with the default values.
 
     Assertions:
     - `num_nodes` must default to 10
@@ -143,7 +180,8 @@ def test__custom_init(custom_validator1):
     """
     Test case for the custom initialization of the `custom_validator1` object.
 
-    This test verifies that the `custom_validator1` object is correctly initialized with the default values for its attributes.
+    This test verifies that the `custom_validator1` object is 
+    correctly initialized with the default values for its attributes.
 
     The following assertions are made:
     - `num_nodes` is set to 100
@@ -154,7 +192,10 @@ def test__custom_init(custom_validator1):
     - `insulation` is set to an array of size `num_communities` with all elements equal to 0.55
     - `affinity` is set to an array of size `num_communities` with all elements equal to 0.45
     - `seed` is set to 1
-    - `nodes`, `communities`, `labels`, `source_nodes`, `source_communities`, `destination_communities`, `destination_nodes`, `edge_sentiments`, `positive_sentiment_graph`, `neutral_sentiment_graph`, `negative_sentiment_graph`, `count_graph` are all set to None
+    - `nodes`, `communities`, `labels`, `source_nodes`, `source_communities`, 
+    `destination_communities`, `destination_nodes`, `edge_sentiments`, 
+    `positive_sentiment_graph`, `neutral_sentiment_graph`, `negative_sentiment_graph`, `count_graph` 
+    are all set to None
 
     If any of the assertions fail, an appropriate error message is raised.
 
@@ -306,12 +347,31 @@ def test__custom_seeding(custom_validator1, custom_validator2):
 
 @pytest.fixture
 def default_evaluator1(default_validator1):
+    """
+    This function takes a `default_validator1` object, simulates it, and returns a `GraphEvaluator` object.
+
+    Parameters:
+    default_validator1 (object): The `default_validator1` object to be simulated.
+
+    Returns:
+    GraphEvaluator: The `GraphEvaluator` object created from the simulated `default_validator1`.
+    """
     default_validator1.simulate()
     return GraphEvaluator(simulator=default_validator1)
 
 
 @pytest.fixture
 def default_evaluator2(default_validator2):
+    """
+    This function takes a `default_validator2` object and performs a simulation using it.
+    It then returns a `GraphEvaluator` object initialized with the `default_validator2` simulator.
+
+    Parameters:
+    - default_validator2: The `default_validator2` object to be used for simulation.
+
+    Returns:
+    - A `GraphEvaluator` object initialized with the `default_validator2` simulator.
+    """
     default_validator2.simulate()
     return GraphEvaluator(simulator=default_validator2)
 
