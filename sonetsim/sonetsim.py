@@ -206,8 +206,15 @@ class GraphEvaluator:
         random.seed(self.seed)
         np.random.seed(self.seed)
 
-    def set_graph(self, graph):
-        self.graph = graph
+    def set_graph(self, graph="count"):
+        if graph == "count":
+            self.graph = self.simulator.count_graph
+        elif graph == "positive":
+            self.graph = self.simulator.positive_sentiment_graph
+        elif graph == "neutral":
+            self.graph = self.simulator.neutral_sentiment_graph
+        elif graph == "negative":
+            self.graph = self.simulator.negative_sentiment_graph
 
     def set_seed(self, seed):
         self.seed = seed
