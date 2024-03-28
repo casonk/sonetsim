@@ -24,7 +24,7 @@ from sonetsim.sonetsim import GraphEvaluator
 def default_validator1():
     """
     This function returns an instance of the GraphSimulator class.
-    
+
     Returns:
         GraphSimulator: An instance of the GraphSimulator class.
     """
@@ -94,7 +94,7 @@ def test__default_init(default_validator1):
     """
     Test case for the default initialization of the `default_validator1` object.
 
-    This test case checks that the `default_validator1` object 
+    This test case checks that the `default_validator1` object
     is correctly initialized with the default values.
 
     Assertions:
@@ -180,7 +180,7 @@ def test__custom_init(custom_validator1):
     """
     Test case for the custom initialization of the `custom_validator1` object.
 
-    This test verifies that the `custom_validator1` object is 
+    This test verifies that the `custom_validator1` object is
     correctly initialized with the default values for its attributes.
 
     The following assertions are made:
@@ -192,9 +192,9 @@ def test__custom_init(custom_validator1):
     - `insulation` is set to an array of size `num_communities` with all elements equal to 0.55
     - `affinity` is set to an array of size `num_communities` with all elements equal to 0.45
     - `seed` is set to 1
-    - `nodes`, `communities`, `labels`, `source_nodes`, `source_communities`, 
-    `destination_communities`, `destination_nodes`, `edge_sentiments`, 
-    `positive_sentiment_graph`, `neutral_sentiment_graph`, `negative_sentiment_graph`, `count_graph` 
+    - `nodes`, `communities`, `labels`, `source_nodes`, `source_communities`,
+    `destination_communities`, `destination_nodes`, `edge_sentiments`,
+    `positive_sentiment_graph`, `neutral_sentiment_graph`, `negative_sentiment_graph`, `count_graph`
     are all set to None
 
     If any of the assertions fail, an appropriate error message is raised.
