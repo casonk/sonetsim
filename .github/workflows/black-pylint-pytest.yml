@@ -3,18 +3,16 @@ name: Black-Pylint-Pytest
 on: [push, pull_request]
 
 jobs:
-  lint:
+  black:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: psf/black@stable
         with:
           options: "--verbose --diff"
-          # src: "."
           jupyter: true
-          # version: "21.5b1"
-  build:
-    needs: lint
+  lint-test:
+    needs: black
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,9 +30,6 @@ jobs:
         pip install pylint
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    # - name: Formatting the code with black
-    #   run: |
-    #     find . -type f \( -name "*.py" -or -name "*.ipynb" \) -exec black {} \;
     - name: Analysing the code with pylint
       run: |
         python -m pylint --fail-under=10 `find -regextype egrep -regex '(.*.py)$'` |
@@ -46,5 +41,4 @@ jobs:
         path: pylint.txt
     - name: Run the test cases
       run: |
-        ls
         pytest -v sonetsim/tests/simulator_validator.py
