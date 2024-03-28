@@ -554,7 +554,7 @@ class GraphEvaluator:
         Evaluate all communities in the network and return a DataFrame with metrics.
 
         Returns:
-            metrics_df (pd.DataFrame): 
+            metrics_df (pd.DataFrame):
             DataFrame containing the evaluation metrics for each community.
                 The columns of the DataFrame include:
                 - homophily
