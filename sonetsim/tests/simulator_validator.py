@@ -9,6 +9,7 @@ The unit tests ensure that the `GraphSimulator` and `GraphEvaluator` classes are
 
 Note: This module requires the `pytest` and `numpy` packages to run the tests.
 """
+
 import pytest
 import numpy as np
 from sonetsim.sonetsim import GraphSimulator
