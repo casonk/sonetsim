@@ -7,7 +7,7 @@ license = "LGPL"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8, <3.11"
 cdlib = "^0.3.0"
 bayanpy = "^0.7.6"
 leidenalg = "^0.10.1"
