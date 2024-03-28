@@ -389,7 +389,7 @@ class GraphEvaluator:
             detected_altruism,
             detected_balance,
             detected_hostility,
-            len(comm_specific_node_df), 
+            len(comm_specific_node_df),
             len(comm_specific_internal_edge_df),
             len(comm_specific_external_edge_df),
         )
@@ -420,7 +420,7 @@ class GraphEvaluator:
         )
 
         return self.metrics_df
-    
+
     def evaluate(self, graph=False):
         self.detect_communities(graph=graph)
         self.evaluate_all_communities()
