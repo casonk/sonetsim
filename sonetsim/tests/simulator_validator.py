@@ -1,3 +1,14 @@
+"""
+This module contains unit tests for the `GraphSimulator` and `GraphEvaluator` classes in the `sonetsim` package.
+
+The tests cover the default initialization of the `GraphSimulator` class, custom initialization of the `GraphSimulator` class, default seeding, custom seeding, and default metrics evaluation.
+
+The `GraphSimulator` class is responsible for simulating graph data with different configurations, while the `GraphEvaluator` class is responsible for evaluating the metrics of the simulated graphs.
+
+The unit tests ensure that the `GraphSimulator` and `GraphEvaluator` classes are functioning correctly by asserting the expected values of various attributes and metrics.
+
+Note: This module requires the `pytest` and `numpy` packages to run the tests.
+"""
 import pytest
 import numpy as np
 from sonetsim.sonetsim import GraphSimulator
@@ -43,6 +54,33 @@ def custom_validator2():
 
 
 def test__default_init(default_validator1):
+    """
+    Test case for the default initialization of the `default_validator1` object.
+
+    This test case checks that the `default_validator1` object is correctly initialized with the default values.
+
+    Assertions:
+    - `num_nodes` must default to 10
+    - `num_edges` must default to 50
+    - `num_communities` must default to 2
+    - `homophily` must default to np.array([0.5, 0.5])
+    - `isolation` must default to np.array([0.5, 0.5])
+    - `insulation` must default to np.array([0.5, 0.5])
+    - `affinity` must default to np.array([0.5, 0.5])
+    - `seed` must default to 0
+    - `nodes` must be None
+    - `communities` must be None
+    - `labels` must be None
+    - `source_nodes` must be None
+    - `source_communities` must be None
+    - `destination_communities` must be None
+    - `destination_nodes` must be None
+    - `edge_sentiments` must be None
+    - `positive_sentiment_graph` must be None
+    - `neutral_sentiment_graph` must be None
+    - `negative_sentiment_graph` must be None
+    - `count_graph` must be None
+    """
     assert default_validator1.num_nodes == 10, "Number of nodes must default to 10"
     assert default_validator1.num_edges == 50, "Number of edges must default to 50"
     assert (
@@ -101,6 +139,28 @@ def test__default_init(default_validator1):
 
 
 def test__custom_init(custom_validator1):
+    """
+    Test case for the custom initialization of the `custom_validator1` object.
+
+    This test verifies that the `custom_validator1` object is correctly initialized with the default values for its attributes.
+
+    The following assertions are made:
+    - `num_nodes` is set to 100
+    - `num_edges` is set to 1000
+    - `num_communities` is set to 50
+    - `homophily` is set to an array of size `num_communities` with all elements equal to 0.75
+    - `isolation` is set to an array of size `num_communities` with all elements equal to 0.65
+    - `insulation` is set to an array of size `num_communities` with all elements equal to 0.55
+    - `affinity` is set to an array of size `num_communities` with all elements equal to 0.45
+    - `seed` is set to 1
+    - `nodes`, `communities`, `labels`, `source_nodes`, `source_communities`, `destination_communities`, `destination_nodes`, `edge_sentiments`, `positive_sentiment_graph`, `neutral_sentiment_graph`, `negative_sentiment_graph`, `count_graph` are all set to None
+
+    If any of the assertions fail, an appropriate error message is raised.
+
+    Parameters:
+    - `custom_validator1`: The `custom_validator1` object to be tested.
+    """
+
     assert custom_validator1.num_nodes == 100, "Number of nodes must default to 10"
     assert custom_validator1.num_edges == 1000, "Number of edges must default to 50"
     assert (
@@ -159,6 +219,20 @@ def test__custom_init(custom_validator1):
 
 
 def test__default_seeding(default_validator1, default_validator2):
+    """
+    Test function to validate the default seeding of two simulators.
+
+    Args:
+        default_validator1: The first default validator object.
+        default_validator2: The second default validator object.
+
+    Returns:
+        None
+
+    Raises:
+        AssertionError: If the nodes or edges of the simulated graphs are not the same.
+
+    """
     pos_g1, neu_g1, neg_g1, cnt_g1 = default_validator1.simulate()
     pos_g2, neu_g2, neg_g2, cnt_g2 = default_validator2.simulate()
     assert (
@@ -188,6 +262,19 @@ def test__default_seeding(default_validator1, default_validator2):
 
 
 def test__custom_seeding(custom_validator1, custom_validator2):
+    """
+    Test function to validate the custom seeding simulation.
+
+    Args:
+        custom_validator1: The first custom validator object.
+        custom_validator2: The second custom validator object.
+
+    Raises:
+        AssertionError: If the nodes or edges of the sentiment graphs or edge count graphs are not the same.
+
+    Returns:
+        None
+    """
     pos_g1, neu_g1, neg_g1, cnt_g1 = custom_validator1.simulate()
     pos_g2, neu_g2, neg_g2, cnt_g2 = custom_validator2.simulate()
     assert (
@@ -229,6 +316,15 @@ def default_evaluator2(default_validator2):
 
 
 def test__default_metrics__count(default_evaluator1):
+    """
+    Test function to evaluate default metrics for counting communities.
+
+    Args:
+        default_evaluator1: An instance of the default evaluator class.
+
+    Raises:
+        AssertionError: If the validation communities do not meet the specified criteria.
+    """
     default_evaluator1.evaluate(graph="count")
     node_mask = default_evaluator1.metrics_df.num_nodes > 1
     internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1

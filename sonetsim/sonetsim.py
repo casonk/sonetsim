@@ -1,9 +1,7 @@
 # IMPORTS
-
-# INTERNAL IMPORTS
+## INTERNAL IMPORTS
 import random
-
-# EXTERNAL IMPORTS
+## EXTERNAL IMPORTS
 from cdlib import algorithms
 import networkx as nx
 import pandas as pd
@@ -11,6 +9,45 @@ import numpy as np
 
 
 class GraphSimulator:
+    """
+    Class for simulating a graph with specified parameters.
+
+    Args:
+        num_nodes (int): Number of nodes in the graph.
+        num_edges (int): Number of edges in the graph.
+        num_communities (int): Number of communities in the graph.
+        homophily (float or array-like): Homophily parameter(s) for each community.
+        isolation (float or array-like): Isolation parameter(s) for each community.
+        insulation (float or array-like): Insulation parameter(s) for each community.
+        affinity (float or array-like): Affinity parameter(s) for each community.
+        seed (int): Seed for random number generation.
+
+    Raises:
+        AssertionError: If any of the static graph parameters are invalid.
+
+    Attributes:
+        num_nodes (int): Number of nodes in the graph.
+        num_edges (int): Number of edges in the graph.
+        num_communities (int): Number of communities in the graph.
+        homophily (ndarray): Homophily parameter(s) for each community.
+        isolation (ndarray): Isolation parameter(s) for each community.
+        insulation (ndarray): Insulation parameter(s) for each community.
+        affinity (ndarray): Affinity parameter(s) for each community.
+        seed (int): Seed for random number generation.
+        nodes (ndarray): Array of node IDs.
+        communities (ndarray): Array of community IDs for each node.
+        labels (ndarray): Array of labels (e.g., ideologies) for each node.
+        source_nodes (ndarray): Array of source node IDs for each edge.
+        source_communities (ndarray): Array of source community IDs for each edge.
+        destination_communities (ndarray): Array of destination community IDs for each edge.
+        destination_nodes (ndarray): Array of destination node IDs for each edge.
+        edge_sentiments (ndarray): Array of sentiment values for each edge.
+        positive_sentiment_graph (nx.DiGraph): Graph with edges weighted to sentiment.
+        neutral_sentiment_graph (nx.DiGraph): Graph with edges weighted to sentiment.
+        negative_sentiment_graph (nx.DiGraph): Graph with edges weighted to sentiment.
+        count_graph (nx.DiGraph): Graph with all edges weighted to 1.
+    """
+
     def __init__(
         self,
         num_nodes=10,
@@ -22,6 +59,9 @@ class GraphSimulator:
         affinity=0.5,
         seed=0,
     ) -> None:
+        """
+        Initialize the GraphSimulator object with the specified parameters.
+        """
 
         # Set graph static parameters
         self.num_nodes = num_nodes
@@ -69,10 +109,16 @@ class GraphSimulator:
         self.count_graph = None
 
     def __initialize_seed__(self):
+        """
+        Initialize the random number generator seed.
+        """
         random.seed(self.seed)
         np.random.seed(self.seed)
 
     def __initialize_graph_data__(self):
+        """
+        Initialize the graph data (nodes, communities, labels, edges, sentiments).
+        """
         # Initialize graph nodes
         self.nodes = np.arange(self.num_nodes)
 
@@ -150,6 +196,9 @@ class GraphSimulator:
         self.edge_sentiments = np.array(edge_sentiments)
 
     def __initialize_graphs__(self):
+        """
+        Initialize the sentiment and count graphs.
+        """
         # Initialize graphs
         ## Sentiment Graph (edges are weighted to sentiment)
         self.positive_sentiment_graph = nx.DiGraph()
@@ -177,6 +226,13 @@ class GraphSimulator:
             self.count_graph.add_edge(u, v, weight=1)
 
     def simulate(self):
+        """
+        Simulate the graph based on the specified parameters.
+
+        Returns:
+            tuple: A tuple containing the positive sentiment graph, neutral sentiment graph,
+                   negative sentiment graph, and count graph.
+        """
         self.__initialize_seed__()
         self.__initialize_graph_data__()
         self.__initialize_graphs__()
@@ -190,8 +246,31 @@ class GraphSimulator:
 
 
 class GraphEvaluator:
-    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0) -> None:
+    """
+    Class for evaluating a graph using a specified algorithm.
 
+    Args:
+        simulator (GraphSimulator): The GraphSimulator object to evaluate.
+        seed (int): Seed for random number generation.
+        algorithm (str): Algorithm to use for community detection.
+        resolution (float): Resolution parameter for the algorithm.
+
+    Attributes:
+        simulator (GraphSimulator): The GraphSimulator object to evaluate.
+        seed (int): Seed for random number generation.
+        algorithm (str): Algorithm to use for community detection.
+        resolution (float): Resolution parameter for the algorithm.
+        graph (nx.DiGraph): The graph to evaluate.
+        communities (list): List of detected communities.
+        node_df (pd.DataFrame): DataFrame containing node information.
+        edge_df (pd.DataFrame): DataFrame containing edge information.
+        metrics_df (pd.DataFrame): DataFrame containing evaluation metrics.
+    """
+
+    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0) -> None:
+        """
+        Initialize the GraphEvaluator object with the specified parameters.
+        """
         self.simulator = simulator
         self.seed = seed
         self.algorithm = algorithm
@@ -203,10 +282,19 @@ class GraphEvaluator:
         self.metrics_df = None
 
     def __initialize_seed__(self):
+        """
+        Initialize the random number generator seed.
+        """
         random.seed(self.seed)
         np.random.seed(self.seed)
 
     def set_graph(self, graph="count"):
+        """
+        Set the graph to evaluate.
+
+        Args:
+            graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+        """
         if graph == "count":
             self.graph = self.simulator.count_graph
         elif graph == "positive":
@@ -217,12 +305,27 @@ class GraphEvaluator:
             self.graph = self.simulator.negative_sentiment_graph
 
     def set_seed(self, seed):
+        """
+        Set the seed for random number generation.
+
+        Args:
+            seed (int): The seed value to set.
+        """
         self.seed = seed
 
     def set_algorithm(self, algorithm):
+        """
+        Set the algorithm to use for community detection.
+
+        Args:
+            algorithm (str): The algorithm to set.
+        """
         self.algorithm = algorithm
 
     def __initialize_dataframes__(self):
+        """
+        Initialize the dataframes for node, edge, and metrics information.
+        """
         node_df = pd.DataFrame(
             data={
                 "node": self.simulator.nodes,
@@ -259,19 +362,25 @@ class GraphEvaluator:
         self.edge_df = edge_df
 
     def detect_communities(self, graph=False):
+        """
+        Detects communities in the graph using the specified algorithm.
+
+        Args:
+            graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+
+        Returns:
+            list: A list of sets, where each set represents a community.
+
+        Raises:
+            ValueError: If the specified algorithm is not supported.
+        """
+
         if graph:
             self.set_graph(graph)
 
         self.__initialize_seed__()
 
         if self.algorithm == "louvain":
-            # self.communities  = [
-            #     set(community) for community in algorithms.louvain(
-            #         g_original=self.graph.to_undirected(),
-            #         weight='weight',
-            #         resolution=self.resolution
-            #         ).communities
-            #         ]
             self.communities = nx.algorithms.community.louvain_communities(
                 G=self.graph,
                 weight="weight",
@@ -293,6 +402,28 @@ class GraphEvaluator:
         return self.communities
 
     def evaluate_single_community(self, community):
+        """
+        Evaluate a single community based on various metrics.
+
+        Args:
+            community: The community to evaluate.
+
+        Returns:
+            A tuple containing the following metrics:
+            - detected_homophily: The percentage of the most frequent labels in the community.
+            - detected_isolation: The percentage of internal edges in the community.
+            - detected_insulation: The percentage of negative external edges in the community.
+            - detected_affinity: The percentage of positive internal edges in the community.
+            - detected_purity: The product of the percentages of all labels in the community.
+            - detected_conductance: The percentage of external edges in the community.
+            - detected_equity: The percentage of neutral external edges in the community.
+            - detected_altruism: The percentage of positive external edges in the community.
+            - detected_balance: The percentage of neutral internal edges in the community.
+            - detected_hostility: The percentage of negative internal edges in the community.
+            - num_nodes: The number of nodes in the community.
+            - num_internal_edges: The number of internal edges in the community.
+            - num_external_edges: The number of external edges in the community.
+        """
         # Generate helper dataframes
         comm_specific_node_df = self.node_df[
             self.node_df.detected_community == community
@@ -395,6 +526,26 @@ class GraphEvaluator:
         )
 
     def evaluate_all_communities(self):
+        """
+        Evaluate all communities in the network and return a DataFrame with metrics.
+
+        Returns:
+            metrics_df (pd.DataFrame): DataFrame containing the evaluation metrics for each community.
+                The columns of the DataFrame include:
+                - homophily
+                - isolation
+                - insulation
+                - affinity
+                - purity
+                - conductance
+                - equity
+                - altruism
+                - balance
+                - hostility
+                - num_nodes
+                - num_internal_edges
+                - num_external_edges
+        """
         metrics = []
         for community in self.node_df["detected_community"].unique():
             community_metrics = self.evaluate_single_community(community)
@@ -422,6 +573,15 @@ class GraphEvaluator:
         return self.metrics_df
 
     def evaluate(self, graph=False):
+        """
+        Evaluates the communities in the graph.
+
+        Parameters:
+        - graph (bool): If True, the graph will be displayed.
+
+        Returns:
+        - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
+        """
         self.detect_communities(graph=graph)
         self.evaluate_all_communities()
         return self.metrics_df
