@@ -116,6 +116,16 @@ class GraphSimulator:
         random.seed(self.seed)
         np.random.seed(self.seed)
 
+    def set_seed(self, seed):
+        """
+        Set the seed for random number generation.
+
+        Args:
+            seed (int): The seed value to set.
+        """
+        self.seed = seed
+        self.__initialize_seed__()
+
     def __initialize_graph_data__(self):
         """
         Initialize the graph data (nodes, communities, labels, edges, sentiments).
@@ -289,6 +299,16 @@ class GraphEvaluator:
         random.seed(self.seed)
         np.random.seed(self.seed)
 
+    def set_seed(self, seed):
+        """
+        Set the seed for random number generation.
+
+        Args:
+            seed (int): The seed value to set.
+        """
+        self.seed = seed
+        self.__initialize_seed__()
+
     def set_graph(self, graph="count"):
         """
         Set the graph to evaluate.
@@ -304,15 +324,6 @@ class GraphEvaluator:
             self.graph = self.simulator.neutral_sentiment_graph
         elif graph == "negative":
             self.graph = self.simulator.negative_sentiment_graph
-
-    def set_seed(self, seed):
-        """
-        Set the seed for random number generation.
-
-        Args:
-            seed (int): The seed value to set.
-        """
-        self.seed = seed
 
     def set_algorithm(self, algorithm):
         """
@@ -445,7 +456,7 @@ class GraphEvaluator:
                 comm_specific_node_df.set_label.value_counts().sort_index().iloc[0]
                 / len(comm_specific_node_df)
             )  # % of the most frequent labels
-        except:
+        except Exception:
             detected_homophily = 0  # THERE ARE NO NODES
         try:
             detected_isolation = len(comm_specific_internal_edge_df) / len(
@@ -531,7 +542,8 @@ class GraphEvaluator:
         Evaluate all communities in the network and return a DataFrame with metrics.
 
         Returns:
-            metrics_df (pd.DataFrame): DataFrame containing the evaluation metrics for each community.
+            metrics_df (pd.DataFrame): 
+            DataFrame containing the evaluation metrics for each community.
                 The columns of the DataFrame include:
                 - homophily
                 - isolation
