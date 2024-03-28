@@ -1,5 +1,6 @@
 """
-This module contains unit tests for the `GraphSimulator` and `GraphEvaluator` classes in the `sonetsim` package.
+This module contains unit tests for the 
+`GraphSimulator` and `GraphEvaluator` classes in the `sonetsim` package.
 
 The tests cover the default initialization of the `GraphSimulator` class, 
 custom initialization of the `GraphSimulator` class, 
@@ -312,7 +313,8 @@ def test__custom_seeding(custom_validator1, custom_validator2):
         custom_validator2: The second custom validator object.
 
     Raises:
-        AssertionError: If the nodes or edges of the sentiment graphs or edge count graphs are not the same.
+        AssertionError: If the nodes or edges of the sentiment graphs 
+        or edge count graphs are not the same.
 
     Returns:
         None
@@ -348,7 +350,8 @@ def test__custom_seeding(custom_validator1, custom_validator2):
 @pytest.fixture
 def default_evaluator1(default_validator1):
     """
-    This function takes a `default_validator1` object, simulates it, and returns a `GraphEvaluator` object.
+    This function takes a `default_validator1` object, 
+    simulates it, and returns a `GraphEvaluator` object.
 
     Parameters:
     default_validator1 (object): The `default_validator1` object to be simulated.

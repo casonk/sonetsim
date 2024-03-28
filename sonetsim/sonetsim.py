@@ -1,3 +1,15 @@
+"""
+This module contains the `GraphSimulator` and `GraphEvaluator` classes in the `sonetsim` package.
+
+The `GraphSimulator` class provides functionality for simulating a graph with specified parameters.
+The `GraphEvaluator` class provides functionality for evaluating the simulated graph.
+
+Classes:
+    - GraphSimulator: Class for simulating a graph with specified parameters.
+    - GraphEvaluator: Class for evaluating the simulated graph.
+
+"""
+
 # IMPORTS
 ## INTERNAL IMPORTS
 import random
@@ -456,7 +468,7 @@ class GraphEvaluator:
                 comm_specific_node_df.set_label.value_counts().sort_index().iloc[0]
                 / len(comm_specific_node_df)
             )  # % of the most frequent labels
-        except Exception:
+        except (KeyError, ZeroDivisionError):
             detected_homophily = 0  # THERE ARE NO NODES
         try:
             detected_isolation = len(comm_specific_internal_edge_df) / len(
