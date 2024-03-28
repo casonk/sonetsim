@@ -200,6 +200,7 @@ class GraphEvaluator:
         self.communities = None
         self.node_df = None
         self.edge_df = None
+        self.metrics_df = None
 
     def __initialize_seed__(self):
         random.seed(self.seed)
@@ -381,8 +382,9 @@ class GraphEvaluator:
             detected_altruism,
             detected_balance,
             detected_hostility,
-            len(comm_specific_node_df),
-            len(comm_specific_edge_df),
+            len(comm_specific_node_df), 
+            len(comm_specific_internal_edge_df),
+            len(comm_specific_external_edge_df),
         )
 
     def evaluate_all_communities(self):
@@ -391,7 +393,7 @@ class GraphEvaluator:
             community_metrics = self.evaluate_single_community(community)
             metrics.append(community_metrics)
 
-        metrics_df = pd.DataFrame(
+        self.metrics_df = pd.DataFrame(
             data=metrics,
             columns=[
                 "homophily",
@@ -405,11 +407,17 @@ class GraphEvaluator:
                 "balance",
                 "hostility",
                 "num_nodes",
-                "num_edges",
+                "num_internal_edges",
+                "num_external_edges",
             ],
         )
 
-        return metrics_df
+        return self.metrics_df
+    
+    def evaluate(self, graph=False):
+        self.detect_communities(graph=graph)
+        self.evaluate_all_communities()
+        return self.metrics_df
 
 
 if __name__ == "__main__":
