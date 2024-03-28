@@ -215,11 +215,13 @@ def test__custom_seeding(custom_validator1, custom_validator2):
 
 @pytest.fixture
 def default_evaluator1(default_validator1):
-    return GraphEvaluator(simulator=default_validator1.simulate())
+    default_validator1.simulate()
+    return GraphEvaluator(simulator=default_validator1)
 
 @pytest.fixture
 def default_evaluator2(default_validator2):
-    return GraphEvaluator(simulator=default_validator2.simulate())
+    default_validator2.simulate()
+    return GraphEvaluator(simulator=default_validator2)
 
 def test__default_metrics__count(default_evaluator1):
     default_evaluator1.evaluate(graph="count")
