@@ -1,6 +1,7 @@
 # IMPORTS
 ## INTERNAL IMPORTS
 import random
+
 ## EXTERNAL IMPORTS
 from cdlib import algorithms
 import networkx as nx
