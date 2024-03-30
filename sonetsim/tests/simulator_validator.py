@@ -427,3 +427,132 @@ def test__default_metrics__count(default_evaluator1):
         validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+
+def test__default_metrics__positive(default_evaluator1):
+    """
+    Test function to evaluate default metrics for positive communities.
+
+    Args:
+        default_evaluator1: An instance of the default evaluator class.
+
+    Raises:
+        AssertionError: If the validation communities do not meet the specified criteria.
+    """
+    default_evaluator1.evaluate(graph="positive")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
+        node_mask & internal_edge_mask & external_edge_mask
+    ]
+    assert (
+        len(validation_communities_df) > 0
+    ), "Validation communities must have at least 1 community"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) > 0.999
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) < 1.001
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+
+def test__default_metrics__neutral(default_evaluator1):
+    """
+    Test function to evaluate default metrics for neutral communities.
+
+    Args:
+        default_evaluator1: An instance of the default evaluator class.
+
+    Raises:
+        AssertionError: If the validation communities do not meet the specified criteria.
+    """
+    default_evaluator1.evaluate(graph="neutral")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
+        node_mask & internal_edge_mask & external_edge_mask
+    ]
+    assert (
+        len(validation_communities_df) > 0
+    ), "Validation communities must have at least 1 community"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) > 0.999
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) < 1.001
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+
+def test__default_metrics__negative(default_evaluator1):
+    """
+    Test function to evaluate default metrics for negative communities.
+
+    Args:
+        default_evaluator1: An instance of the default evaluator class.
+
+    Raises:
+        AssertionError: If the validation communities do not meet the specified criteria.
+    """
+    default_evaluator1.evaluate(graph="negative")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
+        node_mask & internal_edge_mask & external_edge_mask
+    ]
+    assert (
+        len(validation_communities_df) > 0
+    ), "Validation communities must have at least 1 community"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) > 0.999
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) < 1.001
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
