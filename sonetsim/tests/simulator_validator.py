@@ -810,3 +810,52 @@ def test__infomap_metrics__all(default_evaluator1):
     assert (
         default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
+
+def test__all_metrics__all(default_evaluator1):
+    """
+    Test function to evaluate all algorithm metrics for all communities.
+
+    Args:
+        default_evaluator1: An instance of the default evaluator class.
+
+    Raises:
+        AssertionError: If the validation communities do not meet the specified criteria.
+    """
+    default_evaluator1.evaluate_algorithms()
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
+        node_mask & internal_edge_mask & external_edge_mask
+    ]
+    assert (
+        len(validation_communities_df) > 0
+    ), "Validation communities must have at least 1 community"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) > 0.999
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["isolation", "conductance"]].sum(axis=1) < 1.001
+    ).all(), "Sum of isolation and conductance must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["affinity", "balance", "hostility"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of affinity, balance, and hostility must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        > 0.999
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+    assert (
+        validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
+        < 1.001
+    ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+    assert (
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+    ), "Weight method (e.g. graph type) must be one of the supported values"
+    assert (
+        default_evaluator1.metrics_df["algorithm"].isin(["louvain", "leiden", "eva", "infomap"]).all()
+    ), "Algorithm must be one of the supported values"
