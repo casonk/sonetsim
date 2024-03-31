@@ -290,7 +290,7 @@ class GraphEvaluator:
         metrics_df (pd.DataFrame): DataFrame containing evaluation metrics.
     """
 
-    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0) -> None:
+    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0, alpha=0.5) -> None:
         """
         Initialize the GraphEvaluator object with the specified parameters.
         """
@@ -298,6 +298,7 @@ class GraphEvaluator:
         self.seed = seed
         self.algorithm = algorithm
         self.resolution = resolution
+        self.alpha = alpha
         self.graph = simulator.count_graph
         self.communities = None
         self.node_df = None
@@ -420,12 +421,29 @@ class GraphEvaluator:
         elif self.algorithm == "leiden":
             self.communities = [
                 set(community)
-                for community in algorithms.louvain(
-                    g_original=self.graph.to_undirected(), weight="weight"
+                for community in algorithms.leiden(
+                    g_original=self.graph.to_undirected(), 
+                    weights=[e[2] for e in self.graph.edges(data="weight")],
+                ).communities
+            ]
+        elif self.algorithm == "eva":
+            self.communities = [
+                set(community)
+                for community in algorithms.eva(
+                    g_original=self.graph.to_undirected(), 
+                    labels={
+                        n: {"label": self.graph.nodes[n]["label"]} for n in self.graph.nodes
+                    }
+                    weight="weight",
+                    resolution=self.resolution,
+                    alpha=self.alpha,
                 ).communities
             ]
         else:
-            raise ValueError(f"Algorithm {self.algorithm} not supported.")
+            raise ValueError(f"""
+                        Algorithm {self.algorithm} not supported.
+                        Must be one of ["louvain", "leiden", "eva", "infomap"].
+                        """)
 
         self.__initialize_dataframes__()
 
