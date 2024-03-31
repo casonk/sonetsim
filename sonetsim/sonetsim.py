@@ -442,6 +442,14 @@ class GraphEvaluator:
                     alpha=self.alpha,
                 ).communities
             ]
+        elif self.algorithm == "infomap":
+            self.communities = [
+                set(community)
+                for community in algorithms.infomap(
+                    g_original=self.graph,
+                    flags="-d",
+                ).communities
+            ]
         else:
             raise ValueError(
                 f"""
