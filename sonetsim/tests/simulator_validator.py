@@ -608,21 +608,21 @@ def test__default_metrics__all(default_evaluator1):
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__louvain_metrics__all(default_evaluator1):
+def test__louvain_metrics__all(custom_validator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        default_evaluator1: An instance of the default evaluator class.
+        custom_validator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(algorithm="louvain")
-    node_mask = default_evaluator1.metrics_df.num_nodes > 1
-    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
-    validation_communities_df = default_evaluator1.metrics_df[
+    custom_validator1.evaluate(algorithm="louvain")
+    node_mask = custom_validator1.metrics_df.num_nodes > 1
+    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
+    validation_communities_df = custom_validator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -651,25 +651,25 @@ def test__louvain_metrics__all(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__leiden_metrics__all(default_evaluator1):
+def test__leiden_metrics__all(custom_validator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        default_evaluator1: An instance of the default evaluator class.
+        custom_validator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(algorithm="leiden")
-    node_mask = default_evaluator1.metrics_df.num_nodes > 1
-    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
-    validation_communities_df = default_evaluator1.metrics_df[
+    custom_validator1.evaluate(algorithm="leiden")
+    node_mask = custom_validator1.metrics_df.num_nodes > 1
+    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
+    validation_communities_df = custom_validator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -698,25 +698,25 @@ def test__leiden_metrics__all(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__eva_metrics__all(default_evaluator1):
+def test__eva_metrics__all(custom_validator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        default_evaluator1: An instance of the default evaluator class.
+        custom_validator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(algorithm="eva")
-    node_mask = default_evaluator1.metrics_df.num_nodes > 1
-    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
-    validation_communities_df = default_evaluator1.metrics_df[
+    custom_validator1.evaluate(algorithm="eva")
+    node_mask = custom_validator1.metrics_df.num_nodes > 1
+    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
+    validation_communities_df = custom_validator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -745,25 +745,25 @@ def test__eva_metrics__all(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__infomap_metrics__all(default_evaluator1):
+def test__infomap_metrics__all(custom_validator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        default_evaluator1: An instance of the default evaluator class.
+        custom_validator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(algorithm="infomap")
-    node_mask = default_evaluator1.metrics_df.num_nodes > 1
-    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
-    validation_communities_df = default_evaluator1.metrics_df[
+    custom_validator1.evaluate(algorithm="infomap")
+    node_mask = custom_validator1.metrics_df.num_nodes > 1
+    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
+    validation_communities_df = custom_validator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -792,5 +792,5 @@ def test__infomap_metrics__all(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
