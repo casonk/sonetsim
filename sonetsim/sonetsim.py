@@ -63,9 +63,9 @@ class GraphSimulator:
 
     def __init__(
         self,
-        num_nodes=10,
-        num_edges=50,
-        num_communities=2,
+        num_nodes=50,
+        num_edges=250,
+        num_communities=5,
         homophily=0.5,
         isolation=0.5,
         insulation=0.5,
@@ -290,7 +290,9 @@ class GraphEvaluator:
         metrics_df (pd.DataFrame): DataFrame containing evaluation metrics.
     """
 
-    def __init__(self, simulator, seed=0, algorithm="louvain", resolution=1.0) -> None:
+    def __init__(
+        self, simulator, seed=0, algorithm="louvain", resolution=1.0, alpha=0.5
+    ) -> None:
         """
         Initialize the GraphEvaluator object with the specified parameters.
         """
@@ -298,11 +300,13 @@ class GraphEvaluator:
         self.seed = seed
         self.algorithm = algorithm
         self.resolution = resolution
+        self.alpha = alpha
         self.graph = simulator.count_graph
         self.communities = None
         self.node_df = None
         self.edge_df = None
         self.metrics_df = None
+        self.graph_map = {"count": 0, "positive": 1, "neutral": 2, "negative": 3}
 
     def __initialize_seed__(self):
         """
@@ -326,15 +330,16 @@ class GraphEvaluator:
         Set the graph to evaluate.
 
         Args:
-            graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+            graph (str) or (int): The graph to set.
+            Options are "count" or 0, "positive" or 1, "neutral" or 2, "negative" or 3.
         """
-        if graph == "count":
+        if (graph == "count") | (graph == 0):
             self.graph = self.simulator.count_graph
-        elif graph == "positive":
+        elif (graph == "positive") | (graph == 1):
             self.graph = self.simulator.positive_sentiment_graph
-        elif graph == "neutral":
+        elif (graph == "neutral") | (graph == 2):
             self.graph = self.simulator.neutral_sentiment_graph
-        elif graph == "negative":
+        elif (graph == "negative") | (graph == 3):
             self.graph = self.simulator.negative_sentiment_graph
 
     def set_algorithm(self, algorithm):
@@ -385,12 +390,13 @@ class GraphEvaluator:
         self.node_df = node_df
         self.edge_df = edge_df
 
-    def detect_communities(self, graph=False):
+    def detect_communities(self, graph=False, algorithm=False):
         """
         Detects communities in the graph using the specified algorithm.
 
         Args:
             graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+            algorithm (str): The algorithm to use for detection.
 
         Returns:
             list: A list of sets, where each set represents a community.
@@ -401,6 +407,9 @@ class GraphEvaluator:
 
         if graph:
             self.set_graph(graph)
+
+        if algorithm:
+            self.set_algorithm(algorithm)
 
         self.__initialize_seed__()
 
@@ -414,12 +423,40 @@ class GraphEvaluator:
         elif self.algorithm == "leiden":
             self.communities = [
                 set(community)
-                for community in algorithms.louvain(
-                    g_original=self.graph.to_undirected(), weight="weight"
+                for community in algorithms.leiden(
+                    g_original=self.graph,
+                    weights=[e[2] for e in self.graph.edges(data="weight")],
+                ).communities
+            ]
+        elif self.algorithm == "eva":
+            self.communities = [
+                set(community)
+                for community in algorithms.eva(
+                    g_original=self.graph.to_undirected(),
+                    labels={
+                        n: {"label": self.graph.nodes[n]["label"]}
+                        for n in self.graph.nodes
+                    },
+                    weight="weight",
+                    resolution=self.resolution,
+                    alpha=self.alpha,
+                ).communities
+            ]
+        elif self.algorithm == "infomap":
+            self.communities = [
+                set(community)
+                for community in algorithms.infomap(
+                    g_original=self.graph,
+                    flags="-d",
                 ).communities
             ]
         else:
-            raise ValueError(f"Algorithm {self.algorithm} not supported.")
+            raise ValueError(
+                f"""
+                        Algorithm {self.algorithm} not supported.
+                        Must be one of ["louvain", "leiden", "eva", "infomap"].
+                        """
+            )
 
         self.__initialize_dataframes__()
 
@@ -430,7 +467,7 @@ class GraphEvaluator:
         Evaluate a single community based on various metrics.
 
         Args:
-            community: The community to evaluate.
+            community (int): The community to evaluate.
 
         Returns:
             A tuple containing the following metrics:
@@ -597,18 +634,40 @@ class GraphEvaluator:
 
         return self.metrics_df
 
-    def evaluate(self, graph=False):
+    def evaluate_single_graph(self, graph=False, algorithm=False):
         """
         Evaluates the communities in the graph.
 
         Parameters:
         - graph (bool): If True, the graph will be displayed.
+        - algorithm (str): The algorithm to use for detection.
 
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
         """
-        self.detect_communities(graph=graph)
+        self.detect_communities(graph=graph, algorithm=algorithm)
         self.evaluate_all_communities()
+        return self.metrics_df
+
+    def evaluate(self, algorithm=False):
+        """
+        Evaluates the communities in all graphs.
+
+        Parameters:
+        - algorithm (str): The algorithm to use for detection.
+
+        Returns:
+        - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
+        """
+        cnt_df = self.evaluate_single_graph(graph=0, algorithm=algorithm)
+        pos_df = self.evaluate_single_graph(graph=1, algorithm=algorithm)
+        neu_df = self.evaluate_single_graph(graph=2, algorithm=algorithm)
+        neg_df = self.evaluate_single_graph(graph=3, algorithm=algorithm)
+        cnt_df["weight_method"] = 0
+        pos_df["weight_method"] = 1
+        neu_df["weight_method"] = 2
+        neg_df["weight_method"] = 3
+        self.metrics_df = pd.concat([cnt_df, pos_df, neu_df, neg_df])
         return self.metrics_df
 
 
