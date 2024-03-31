@@ -639,5 +639,6 @@ class GraphEvaluator:
         self.metrics_df = pd.concat([cnt_df, pos_df, neu_df, neg_df])
         return self.metrics_df
 
+
 if __name__ == "__main__":
     pass
