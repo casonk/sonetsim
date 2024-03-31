@@ -63,9 +63,9 @@ class GraphSimulator:
 
     def __init__(
         self,
-        num_nodes=10,
-        num_edges=50,
-        num_communities=2,
+        num_nodes=50,
+        num_edges=250,
+        num_communities=5,
         homophily=0.5,
         isolation=0.5,
         insulation=0.5,
