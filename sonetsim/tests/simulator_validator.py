@@ -395,7 +395,7 @@ def test__default_metrics__count(default_evaluator1):
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(graph="count")
+    default_evaluator1.evaluate_single_graph(graph="count")
     node_mask = default_evaluator1.metrics_df.num_nodes > 1
     internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
     external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
@@ -439,7 +439,7 @@ def test__default_metrics__positive(default_evaluator1):
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(graph="positive")
+    default_evaluator1.evaluate_single_graph(graph="positive")
     node_mask = default_evaluator1.metrics_df.num_nodes > 1
     internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
     external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
@@ -483,7 +483,7 @@ def test__default_metrics__neutral(default_evaluator1):
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(graph="neutral")
+    default_evaluator1.evaluate_single_graph(graph="neutral")
     node_mask = default_evaluator1.metrics_df.num_nodes > 1
     internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
     external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
@@ -527,7 +527,7 @@ def test__default_metrics__negative(default_evaluator1):
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    default_evaluator1.evaluate(graph="negative")
+    default_evaluator1.evaluate_single_graph(graph="negative")
     node_mask = default_evaluator1.metrics_df.num_nodes > 1
     internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
     external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1

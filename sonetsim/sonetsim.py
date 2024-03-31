@@ -303,12 +303,7 @@ class GraphEvaluator:
         self.node_df = None
         self.edge_df = None
         self.metrics_df = None
-        self.graph_map = {
-            "count": 0,
-            "positive": 1,
-            "neutral": 2,
-            "negative": 3 
-        }
+        self.graph_map = {"count": 0, "positive": 1, "neutral": 2, "negative": 3}
 
     def __initialize_seed__(self):
         """
@@ -332,7 +327,7 @@ class GraphEvaluator:
         Set the graph to evaluate.
 
         Args:
-            graph (str) or (int): The graph to set. 
+            graph (str) or (int): The graph to set.
             Options are "count" or 0, "positive" or 1, "neutral" or 2, "negative" or 3.
         """
         if (graph == "count") | (graph == 0):
@@ -608,7 +603,7 @@ class GraphEvaluator:
 
         return self.metrics_df
 
-    def evaluate(self, graph=False, algorithm=False):
+    def evaluate_single_graph(self, graph=False, algorithm=False):
         """
         Evaluates the communities in the graph.
 
