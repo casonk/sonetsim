@@ -682,10 +682,12 @@ class GraphEvaluator:
         """
         alg_dfs = []
         for algorithm in algorithms:
-            alg_df = self.evaluate(algorithm=algorithm)
+            alg_df = self.evaluate(algorithm=algorithm) #.copy(deep=True)
             alg_df["algorithm"] = algorithm
+            alg_dfs.append(alg_df)
         self.metrics_df = pd.concat(alg_dfs)
         return self.metrics_df
+
 
 if __name__ == "__main__":
     pass
