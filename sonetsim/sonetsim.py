@@ -436,7 +436,7 @@ class GraphEvaluator:
         Evaluate a single community based on various metrics.
 
         Args:
-            community: The community to evaluate.
+            community (int): The community to evaluate.
 
         Returns:
             A tuple containing the following metrics:
@@ -609,6 +609,7 @@ class GraphEvaluator:
 
         Parameters:
         - graph (bool): If True, the graph will be displayed.
+        - algorithm (str): The algorithm to use for detection.
 
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
@@ -617,6 +618,26 @@ class GraphEvaluator:
         self.evaluate_all_communities()
         return self.metrics_df
 
+    def evaluate(self, algorithm=False):
+        """
+        Evaluates the communities in all graphs.
+
+        Parameters:
+        - algorithm (str): The algorithm to use for detection.
+
+        Returns:
+        - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
+        """
+        cnt_df = self.evaluate_single_graph(graph=0, algorithm=algorithm)
+        pos_df = self.evaluate_single_graph(graph=1, algorithm=algorithm)
+        neu_df = self.evaluate_single_graph(graph=2, algorithm=algorithm)
+        neg_df = self.evaluate_single_graph(graph=3, algorithm=algorithm)
+        cnt_df["weight_method"] = 0
+        pos_df["weight_method"] = 1
+        neu_df["weight_method"] = 2
+        neg_df["weight_method"] = 3
+        self.metrics_df = pd.concat([cnt_df, pos_df, neu_df, neg_df])
+        return self.metrics_df
 
 if __name__ == "__main__":
     pass
