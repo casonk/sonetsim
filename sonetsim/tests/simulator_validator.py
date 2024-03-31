@@ -560,6 +560,7 @@ def test__default_metrics__negative(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
 
+
 def test__default_metrics__all(default_evaluator1):
     """
     Test function to evaluate default metrics for negative communities.
@@ -603,6 +604,5 @@ def test__default_metrics__all(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        default_evaluator1.metrics_df['weight_method'].isin([0, 1, 2, 3]).all()
-        == True
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all() == True
     ), "Weight method (e.g. graph type) must be one of the specified values"
