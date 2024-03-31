@@ -2,6 +2,11 @@
 .notes
 sonetsim/local_notebooks/
 
+# Local backup files
+sonetsim/__arch
+sonetsim/tests/__arch
+*.bak
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

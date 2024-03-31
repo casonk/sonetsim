@@ -811,6 +811,7 @@ def test__infomap_metrics__all(default_evaluator1):
         default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
+
 def test__all_metrics__all(default_evaluator1):
     """
     Test function to evaluate all algorithm metrics for all communities.
@@ -857,5 +858,7 @@ def test__all_metrics__all(default_evaluator1):
         default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the supported values"
     assert (
-        default_evaluator1.metrics_df["algorithm"].isin(["louvain", "leiden", "eva", "infomap"]).all()
+        default_evaluator1.metrics_df["algorithm"]
+        .isin(["louvain", "leiden", "eva", "infomap"])
+        .all()
     ), "Algorithm must be one of the supported values"
