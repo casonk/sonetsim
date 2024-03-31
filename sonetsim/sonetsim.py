@@ -424,7 +424,7 @@ class GraphEvaluator:
             self.communities = [
                 set(community)
                 for community in algorithms.leiden(
-                    g_original=self.graph.to_undirected(),
+                    g_original=self.graph,
                     weights=[e[2] for e in self.graph.edges(data="weight")],
                 ).communities
             ]
