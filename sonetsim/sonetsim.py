@@ -335,13 +335,13 @@ class GraphEvaluator:
             graph (str) or (int): The graph to set. 
             Options are "count" or 0, "positive" or 1, "neutral" or 2, "negative" or 3.
         """
-        if graph == "count" | graph == 0:
+        if (graph == "count") | (graph == 0):
             self.graph = self.simulator.count_graph
-        elif graph == "positive" | graph == 1:
+        elif (graph == "positive") | (graph == 1):
             self.graph = self.simulator.positive_sentiment_graph
-        elif graph == "neutral" | graph == 2:
+        elif (graph == "neutral") | (graph == 2):
             self.graph = self.simulator.neutral_sentiment_graph
-        elif graph == "negative" | graph == 3:
+        elif (graph == "negative") | (graph == 3):
             self.graph = self.simulator.negative_sentiment_graph
 
     def set_algorithm(self, algorithm):
@@ -392,12 +392,13 @@ class GraphEvaluator:
         self.node_df = node_df
         self.edge_df = edge_df
 
-    def detect_communities(self, graph=False):
+    def detect_communities(self, graph=False, algorithm=False):
         """
         Detects communities in the graph using the specified algorithm.
 
         Args:
             graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+            algorithm (str): The algorithm to use for detection.
 
         Returns:
             list: A list of sets, where each set represents a community.
@@ -408,6 +409,9 @@ class GraphEvaluator:
 
         if graph:
             self.set_graph(graph)
+
+        if algorithm:
+            self.set_algorithm(algorithm)
 
         self.__initialize_seed__()
 
@@ -604,7 +608,7 @@ class GraphEvaluator:
 
         return self.metrics_df
 
-    def evaluate(self, graph=False):
+    def evaluate(self, graph=False, algorithm=False):
         """
         Evaluates the communities in the graph.
 
@@ -614,7 +618,7 @@ class GraphEvaluator:
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
         """
-        self.detect_communities(graph=graph)
+        self.detect_communities(graph=graph, algorithm=algorithm)
         self.evaluate_all_communities()
         return self.metrics_df
 
