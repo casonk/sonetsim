@@ -303,6 +303,12 @@ class GraphEvaluator:
         self.node_df = None
         self.edge_df = None
         self.metrics_df = None
+        self.graph_map = {
+            "count": 0,
+            "positive": 1,
+            "neutral": 2,
+            "negative": 3 
+        }
 
     def __initialize_seed__(self):
         """
@@ -326,15 +332,16 @@ class GraphEvaluator:
         Set the graph to evaluate.
 
         Args:
-            graph (str): The graph to set. Options are "count", "positive", "neutral", "negative".
+            graph (str) or (int): The graph to set. 
+            Options are "count" or 0, "positive" or 1, "neutral" or 2, "negative" or 3.
         """
-        if graph == "count":
+        if graph == "count" | graph == 0:
             self.graph = self.simulator.count_graph
-        elif graph == "positive":
+        elif graph == "positive" | graph == 1:
             self.graph = self.simulator.positive_sentiment_graph
-        elif graph == "neutral":
+        elif graph == "neutral" | graph == 2:
             self.graph = self.simulator.neutral_sentiment_graph
-        elif graph == "negative":
+        elif graph == "negative" | graph == 3:
             self.graph = self.simulator.negative_sentiment_graph
 
     def set_algorithm(self, algorithm):
