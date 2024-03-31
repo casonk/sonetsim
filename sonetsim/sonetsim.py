@@ -670,6 +670,22 @@ class GraphEvaluator:
         self.metrics_df = pd.concat([cnt_df, pos_df, neu_df, neg_df])
         return self.metrics_df
 
+    def evaluate_algorithms(self, algorithms=["louvain", "leiden", "eva", "infomap"]):
+        """
+        Evaluates the communities in all graphs.
+
+        Parameters:
+        - algorithms (list(str)): The algorithms to use for detection.
+
+        Returns:
+        - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
+        """
+        alg_dfs = []
+        for algorithm in algorithms:
+            alg_df = self.evaluate(algorithm=algorithm)
+            alg_df["algorithm"] = algorithm
+        self.metrics_df = pd.concat(alg_dfs)
+        return self.metrics_df
 
 if __name__ == "__main__":
     pass
