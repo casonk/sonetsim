@@ -102,10 +102,10 @@ def test__default_init(default_simulator1):
     - `num_nodes` must default to 10
     - `num_edges` must default to 50
     - `num_communities` must default to 2
-    - `homophily` must default to np.array([0.5, 0.5])
-    - `isolation` must default to np.array([0.5, 0.5])
-    - `insulation` must default to np.array([0.5, 0.5])
-    - `affinity` must default to np.array([0.5, 0.5])
+    - `homophily` must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    - `isolation` must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    - `insulation` must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    - `affinity` must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])
     - `seed` must default to 0
     - `nodes` must be None
     - `communities` must be None
@@ -126,17 +126,17 @@ def test__default_init(default_simulator1):
         default_simulator1.num_communities == 5
     ), "Number of communities must default to 5"
     assert (
-        default_simulator1.homophily == np.array([0.5, 0.5])
-    ).all(), "Homophily must default to np.array([0.5, 0.5])"
+        default_simulator1.homophily == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    ).all(), "Homophily must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
     assert (
-        default_simulator1.isolation == np.array([0.5, 0.5])
-    ).all(), "Isolation must default to np.array([0.5, 0.5])"
+        default_simulator1.isolation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    ).all(), "Isolation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
     assert (
-        default_simulator1.insulation == np.array([0.5, 0.5])
-    ).all(), "Insulation must default to np.array([0.5, 0.5])"
+        default_simulator1.insulation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    ).all(), "Insulation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
     assert (
-        default_simulator1.affinity == np.array([0.5, 0.5])
-    ).all(), "Affinity must default to np.array([0.5, 0.5])"
+        default_simulator1.affinity == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
+    ).all(), "Affinity must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
     assert default_simulator1.seed == 0, "Seed must be default to 0"
     assert default_simulator1.nodes is None, "Nodes must be None"
     assert default_simulator1.communities is None, "Communities must be None"
@@ -384,6 +384,7 @@ def default_evaluator2(default_simulator2):
     default_simulator2.simulate()
     return GraphEvaluator(simulator=default_simulator2)
 
+
 @pytest.fixture
 def custom_evaluator1(custom_simulator1):
     """
@@ -398,6 +399,7 @@ def custom_evaluator1(custom_simulator1):
     """
     custom_simulator1.simulate()
     return GraphEvaluator(simulator=custom_simulator1)
+
 
 def test__default_metrics__count(default_evaluator1):
     """
