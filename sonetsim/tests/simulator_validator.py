@@ -22,7 +22,7 @@ from sonetsim.sonetsim import GraphEvaluator
 
 
 @pytest.fixture
-def default_validator1():
+def default_simulator1():
     """
     This function returns an instance of the GraphSimulator class.
 
@@ -33,7 +33,7 @@ def default_validator1():
 
 
 @pytest.fixture
-def default_validator2():
+def default_simulator2():
     """
     Returns an instance of GraphSimulator.
 
@@ -48,7 +48,7 @@ def default_validator2():
 
 
 @pytest.fixture
-def custom_validator1():
+def custom_simulator1():
     """
     This function creates and returns a GraphSimulator object with custom parameters.
 
@@ -68,7 +68,7 @@ def custom_validator1():
 
 
 @pytest.fixture
-def custom_validator2():
+def custom_simulator2():
     """
     Returns a GraphSimulator object with custom parameters.
 
@@ -91,11 +91,11 @@ def custom_validator2():
     )
 
 
-def test__default_init(default_validator1):
+def test__default_init(default_simulator1):
     """
-    Test case for the default initialization of the `default_validator1` object.
+    Test case for the default initialization of the `default_simulator1` object.
 
-    This test case checks that the `default_validator1` object
+    This test case checks that the `default_simulator1` object
     is correctly initialized with the default values.
 
     Assertions:
@@ -120,68 +120,68 @@ def test__default_init(default_validator1):
     - `negative_sentiment_graph` must be None
     - `count_graph` must be None
     """
-    assert default_validator1.num_nodes == 10, "Number of nodes must default to 10"
-    assert default_validator1.num_edges == 50, "Number of edges must default to 50"
+    assert default_simulator1.num_nodes == 50, "Number of nodes must default to 50"
+    assert default_simulator1.num_edges == 250, "Number of edges must default to 250"
     assert (
-        default_validator1.num_communities == 2
-    ), "Number of communities must default to 2"
+        default_simulator1.num_communities == 5
+    ), "Number of communities must default to 5"
     assert (
-        default_validator1.homophily == np.array([0.5, 0.5])
+        default_simulator1.homophily == np.array([0.5, 0.5])
     ).all(), "Homophily must default to np.array([0.5, 0.5])"
     assert (
-        default_validator1.isolation == np.array([0.5, 0.5])
+        default_simulator1.isolation == np.array([0.5, 0.5])
     ).all(), "Isolation must default to np.array([0.5, 0.5])"
     assert (
-        default_validator1.insulation == np.array([0.5, 0.5])
+        default_simulator1.insulation == np.array([0.5, 0.5])
     ).all(), "Insulation must default to np.array([0.5, 0.5])"
     assert (
-        default_validator1.affinity == np.array([0.5, 0.5])
+        default_simulator1.affinity == np.array([0.5, 0.5])
     ).all(), "Affinity must default to np.array([0.5, 0.5])"
-    assert default_validator1.seed == 0, "Seed must be default to 0"
-    assert default_validator1.nodes is None, "Nodes must be None"
-    assert default_validator1.communities is None, "Communities must be None"
-    assert default_validator1.labels is None, "Labels must be None"
-    assert default_validator1.source_nodes is None, "Source nodes must be None"
+    assert default_simulator1.seed == 0, "Seed must be default to 0"
+    assert default_simulator1.nodes is None, "Nodes must be None"
+    assert default_simulator1.communities is None, "Communities must be None"
+    assert default_simulator1.labels is None, "Labels must be None"
+    assert default_simulator1.source_nodes is None, "Source nodes must be None"
     assert (
-        default_validator1.source_communities is None
+        default_simulator1.source_communities is None
     ), "Source communities must be None"
     assert (
-        default_validator1.destination_communities is None
+        default_simulator1.destination_communities is None
     ), "Destination communities must be None"
     assert (
-        default_validator1.destination_nodes is None
+        default_simulator1.destination_nodes is None
     ), "Destination nodes must be None"
-    assert default_validator1.edge_sentiments is None, "Edge sentiments must be None"
+    assert default_simulator1.edge_sentiments is None, "Edge sentiments must be None"
     assert (
-        default_validator1.positive_sentiment_graph is None
+        default_simulator1.positive_sentiment_graph is None
     ), "Positive sentiment graph must be None"
     assert (
-        default_validator1.neutral_sentiment_graph is None
+        default_simulator1.neutral_sentiment_graph is None
     ), "Neutral sentiment graph must be None"
     assert (
-        default_validator1.negative_sentiment_graph is None
+        default_simulator1.negative_sentiment_graph is None
     ), "Negative sentiment graph must be None"
-    assert default_validator1.count_graph is None, "Count graph must be None"
-    assert default_validator1.nodes is None, "Nodes must be None"
-    assert default_validator1.communities is None, "Communities must be None"
-    assert default_validator1.labels is None, "Labels must be None"
-    assert default_validator1.source_nodes is None, "Source nodes must be None"
+    assert default_simulator1.count_graph is None, "Count graph must be None"
+    assert default_simulator1.nodes is None, "Nodes must be None"
+    assert default_simulator1.communities is None, "Communities must be None"
+    assert default_simulator1.labels is None, "Labels must be None"
+    assert default_simulator1.source_nodes is None, "Source nodes must be None"
     assert (
-        default_validator1.source_communities is None
+        default_simulator1.source_communities is None
     ), "Source communities must be None"
     assert (
-        default_validator1.destination_communities is None
+        default_simulator1.destination_communities is None
     ), "Destination communities must be None"
     assert (
-        default_validator1.destination_nodes is None
+        default_simulator1.destination_nodes is None
     ), "Destination nodes must be None"
 
 
-def test__custom_init(custom_validator1):
+def test__custom_init(custom_simulator1):
     """
-    Test case for the custom initialization of the `custom_validator1` object.
+    Test case for the custom initialization of the `custom_simulator1` object.
 
-    This test verifies that the `custom_validator1` object is
+    This test verifies that the `custom_simulator1` object is
     correctly initialized with the default values for its attributes.
 
     The following assertions are made:
@@ -201,79 +201,79 @@ def test__custom_init(custom_validator1):
     If any of the assertions fail, an appropriate error message is raised.
 
     Parameters:
-    - `custom_validator1`: The `custom_validator1` object to be tested.
+    - `custom_simulator1`: The `custom_simulator1` object to be tested.
     """
 
-    assert custom_validator1.num_nodes == 100, "Number of nodes must default to 10"
-    assert custom_validator1.num_edges == 1000, "Number of edges must default to 50"
+    assert custom_simulator1.num_nodes == 100, "Number of nodes must default to 10"
+    assert custom_simulator1.num_edges == 1000, "Number of edges must default to 50"
     assert (
-        custom_validator1.num_communities == 50
+        custom_simulator1.num_communities == 50
     ), "Number of communities must default to 2"
     assert (
-        custom_validator1.homophily
-        == np.array([0.75 for _ in range(custom_validator1.num_communities)])
+        custom_simulator1.homophily
+        == np.array([0.75 for _ in range(custom_simulator1.num_communities)])
     ).all(), (
         "Homophily must default to np.array of size num_communities and input value"
     )
     assert (
-        custom_validator1.isolation
-        == np.array([0.65 for _ in range(custom_validator1.num_communities)])
+        custom_simulator1.isolation
+        == np.array([0.65 for _ in range(custom_simulator1.num_communities)])
     ).all(), (
         "Isolation must default to np.array of size num_communities and input value"
     )
     assert (
-        custom_validator1.insulation
-        == np.array([0.55 for _ in range(custom_validator1.num_communities)])
+        custom_simulator1.insulation
+        == np.array([0.55 for _ in range(custom_simulator1.num_communities)])
     ).all(), (
         "Insulation must default to np.array of size num_communities and input value"
     )
     assert (
-        custom_validator1.affinity
-        == np.array([0.45 for _ in range(custom_validator1.num_communities)])
+        custom_simulator1.affinity
+        == np.array([0.45 for _ in range(custom_simulator1.num_communities)])
     ).all(), "Affinity must default to np.array of size num_communities and input value"
-    assert custom_validator1.seed == 1, "Seed must be set to input seed value"
-    assert custom_validator1.nodes is None, "Nodes must be None"
-    assert custom_validator1.communities is None, "Communities must be None"
-    assert custom_validator1.labels is None, "Labels must be None"
-    assert custom_validator1.source_nodes is None, "Source nodes must be None"
+    assert custom_simulator1.seed == 1, "Seed must be set to input seed value"
+    assert custom_simulator1.nodes is None, "Nodes must be None"
+    assert custom_simulator1.communities is None, "Communities must be None"
+    assert custom_simulator1.labels is None, "Labels must be None"
+    assert custom_simulator1.source_nodes is None, "Source nodes must be None"
     assert (
-        custom_validator1.source_communities is None
+        custom_simulator1.source_communities is None
     ), "Source communities must be None"
     assert (
-        custom_validator1.destination_communities is None
+        custom_simulator1.destination_communities is None
     ), "Destination communities must be None"
-    assert custom_validator1.destination_nodes is None, "Destination nodes must be None"
-    assert custom_validator1.edge_sentiments is None, "Edge sentiments must be None"
+    assert custom_simulator1.destination_nodes is None, "Destination nodes must be None"
+    assert custom_simulator1.edge_sentiments is None, "Edge sentiments must be None"
     assert (
-        custom_validator1.positive_sentiment_graph is None
+        custom_simulator1.positive_sentiment_graph is None
     ), "Positive sentiment graph must be None"
     assert (
-        custom_validator1.neutral_sentiment_graph is None
+        custom_simulator1.neutral_sentiment_graph is None
     ), "Neutral sentiment graph must be None"
     assert (
-        custom_validator1.negative_sentiment_graph is None
+        custom_simulator1.negative_sentiment_graph is None
     ), "Negative sentiment graph must be None"
-    assert custom_validator1.count_graph is None, "Count graph must be None"
-    assert custom_validator1.nodes is None, "Nodes must be None"
-    assert custom_validator1.communities is None, "Communities must be None"
-    assert custom_validator1.labels is None, "Labels must be None"
-    assert custom_validator1.source_nodes is None, "Source nodes must be None"
+    assert custom_simulator1.count_graph is None, "Count graph must be None"
+    assert custom_simulator1.nodes is None, "Nodes must be None"
+    assert custom_simulator1.communities is None, "Communities must be None"
+    assert custom_simulator1.labels is None, "Labels must be None"
+    assert custom_simulator1.source_nodes is None, "Source nodes must be None"
     assert (
-        custom_validator1.source_communities is None
+        custom_simulator1.source_communities is None
     ), "Source communities must be None"
     assert (
-        custom_validator1.destination_communities is None
+        custom_simulator1.destination_communities is None
     ), "Destination communities must be None"
-    assert custom_validator1.destination_nodes is None, "Destination nodes must be None"
+    assert custom_simulator1.destination_nodes is None, "Destination nodes must be None"
 
 
-def test__default_seeding(default_validator1, default_validator2):
+def test__default_seeding(default_simulator1, default_simulator2):
     """
     Test function to validate the default seeding of two simulators.
 
     Args:
-        default_validator1: The first default validator object.
-        default_validator2: The second default validator object.
+        default_simulator1: The first default validator object.
+        default_simulator2: The second default validator object.
 
     Returns:
         None
@@ -282,8 +282,8 @@ def test__default_seeding(default_validator1, default_validator2):
         AssertionError: If the nodes or edges of the simulated graphs are not the same.
 
     """
-    pos_g1, neu_g1, neg_g1, cnt_g1 = default_validator1.simulate()
-    pos_g2, neu_g2, neg_g2, cnt_g2 = default_validator2.simulate()
+    pos_g1, neu_g1, neg_g1, cnt_g1 = default_simulator1.simulate()
+    pos_g2, neu_g2, neg_g2, cnt_g2 = default_simulator2.simulate()
     assert (
         pos_g1.nodes() == pos_g2.nodes()
     ), "Nodes must be the same for positive sentiment graphs"
@@ -310,13 +310,13 @@ def test__default_seeding(default_validator1, default_validator2):
     ), "Edges must be the same for edge count graphs"
 
 
-def test__custom_seeding(custom_validator1, custom_validator2):
+def test__custom_seeding(custom_simulator1, custom_simulator2):
     """
     Test function to validate the custom seeding simulation.
 
     Args:
-        custom_validator1: The first custom validator object.
-        custom_validator2: The second custom validator object.
+        custom_simulator1: The first custom validator object.
+        custom_simulator2: The second custom validator object.
 
     Raises:
         AssertionError: If the nodes or edges of the sentiment graphs
@@ -325,8 +325,8 @@ def test__custom_seeding(custom_validator1, custom_validator2):
     Returns:
         None
     """
-    pos_g1, neu_g1, neg_g1, cnt_g1 = custom_validator1.simulate()
-    pos_g2, neu_g2, neg_g2, cnt_g2 = custom_validator2.simulate()
+    pos_g1, neu_g1, neg_g1, cnt_g1 = custom_simulator1.simulate()
+    pos_g2, neu_g2, neg_g2, cnt_g2 = custom_simulator2.simulate()
     assert (
         pos_g1.nodes() == pos_g2.nodes()
     ), "Nodes must be the same for positive sentiment graphs"
@@ -354,36 +354,50 @@ def test__custom_seeding(custom_validator1, custom_validator2):
 
 
 @pytest.fixture
-def default_evaluator1(default_validator1):
+def default_evaluator1(default_simulator1):
     """
-    This function takes a `default_validator1` object,
+    This function takes a `default_simulator1` object,
     simulates it, and returns a `GraphEvaluator` object.
 
     Parameters:
-    default_validator1 (object): The `default_validator1` object to be simulated.
+    default_simulator1 (object): The `default_simulator1` object to be simulated.
 
     Returns:
-    GraphEvaluator: The `GraphEvaluator` object created from the simulated `default_validator1`.
+    GraphEvaluator: The `GraphEvaluator` object created from the simulated `default_simulator1`.
     """
-    default_validator1.simulate()
-    return GraphEvaluator(simulator=default_validator1)
+    default_simulator1.simulate()
+    return GraphEvaluator(simulator=default_simulator1)
 
 
 @pytest.fixture
-def default_evaluator2(default_validator2):
+def default_evaluator2(default_simulator2):
     """
-    This function takes a `default_validator2` object and performs a simulation using it.
-    It then returns a `GraphEvaluator` object initialized with the `default_validator2` simulator.
+    This function takes a `default_simulator2` object and performs a simulation using it.
+    It then returns a `GraphEvaluator` object initialized with the `default_simulator2` simulator.
 
     Parameters:
-    - default_validator2: The `default_validator2` object to be used for simulation.
+    - default_simulator2: The `default_simulator2` object to be used for simulation.
 
     Returns:
-    - A `GraphEvaluator` object initialized with the `default_validator2` simulator.
+    - A `GraphEvaluator` object initialized with the `default_simulator2` simulator.
     """
-    default_validator2.simulate()
-    return GraphEvaluator(simulator=default_validator2)
+    default_simulator2.simulate()
+    return GraphEvaluator(simulator=default_simulator2)
 
+@pytest.fixture
+def custom_evaluator1(custom_simulator1):
+    """
+    This function takes a `custom_simulator1` object,
+    simulates it, and returns a `GraphEvaluator` object.
+
+    Parameters:
+    custom_simulator1 (object): The `custom_simulator1` object to be simulated.
+
+    Returns:
+    GraphEvaluator: The `GraphEvaluator` object created from the simulated `custom_simulator1`.
+    """
+    custom_simulator1.simulate()
+    return GraphEvaluator(simulator=custom_simulator1)
 
 def test__default_metrics__count(default_evaluator1):
     """
@@ -608,21 +622,21 @@ def test__default_metrics__all(default_evaluator1):
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__louvain_metrics__all(custom_validator1):
+def test__louvain_metrics__all(default_evaluator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        custom_validator1: An instance of the default evaluator class.
+        default_evaluator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    custom_validator1.evaluate(algorithm="louvain")
-    node_mask = custom_validator1.metrics_df.num_nodes > 1
-    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
-    validation_communities_df = custom_validator1.metrics_df[
+    default_evaluator1.evaluate(algorithm="louvain")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -651,25 +665,25 @@ def test__louvain_metrics__all(custom_validator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__leiden_metrics__all(custom_validator1):
+def test__leiden_metrics__all(default_evaluator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        custom_validator1: An instance of the default evaluator class.
+        default_evaluator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    custom_validator1.evaluate(algorithm="leiden")
-    node_mask = custom_validator1.metrics_df.num_nodes > 1
-    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
-    validation_communities_df = custom_validator1.metrics_df[
+    default_evaluator1.evaluate(algorithm="leiden")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -698,25 +712,25 @@ def test__leiden_metrics__all(custom_validator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__eva_metrics__all(custom_validator1):
+def test__eva_metrics__all(default_evaluator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        custom_validator1: An instance of the default evaluator class.
+        default_evaluator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    custom_validator1.evaluate(algorithm="eva")
-    node_mask = custom_validator1.metrics_df.num_nodes > 1
-    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
-    validation_communities_df = custom_validator1.metrics_df[
+    default_evaluator1.evaluate(algorithm="eva")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -745,25 +759,25 @@ def test__eva_metrics__all(custom_validator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
 
 
-def test__infomap_metrics__all(custom_validator1):
+def test__infomap_metrics__all(default_evaluator1):
     """
     Test function to evaluate louvain metrics for all communities.
 
     Args:
-        custom_validator1: An instance of the default evaluator class.
+        default_evaluator1: An instance of the default evaluator class.
 
     Raises:
         AssertionError: If the validation communities do not meet the specified criteria.
     """
-    custom_validator1.evaluate(algorithm="infomap")
-    node_mask = custom_validator1.metrics_df.num_nodes > 1
-    internal_edge_mask = custom_validator1.metrics_df.num_internal_edges > 1
-    external_edge_mask = custom_validator1.metrics_df.num_external_edges > 1
-    validation_communities_df = custom_validator1.metrics_df[
+    default_evaluator1.evaluate(algorithm="infomap")
+    node_mask = default_evaluator1.metrics_df.num_nodes > 1
+    internal_edge_mask = default_evaluator1.metrics_df.num_internal_edges > 1
+    external_edge_mask = default_evaluator1.metrics_df.num_external_edges > 1
+    validation_communities_df = default_evaluator1.metrics_df[
         node_mask & internal_edge_mask & external_edge_mask
     ]
     assert (
@@ -792,5 +806,5 @@ def test__infomap_metrics__all(custom_validator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
     assert (
-        custom_validator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
+        default_evaluator1.metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
     ), "Weight method (e.g. graph type) must be one of the specified values"
