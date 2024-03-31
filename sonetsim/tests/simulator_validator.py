@@ -428,6 +428,7 @@ def test__default_metrics__count(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
 
+
 def test__default_metrics__positive(default_evaluator1):
     """
     Test function to evaluate default metrics for positive communities.
@@ -471,6 +472,7 @@ def test__default_metrics__positive(default_evaluator1):
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
 
+
 def test__default_metrics__neutral(default_evaluator1):
     """
     Test function to evaluate default metrics for neutral communities.
@@ -513,6 +515,7 @@ def test__default_metrics__neutral(default_evaluator1):
         validation_communities_df[["insulation", "equity", "altruism"]].sum(axis=1)
         < 1.001
     ).all(), "Sum of insulation, equity, and altruism must be close to 1"
+
 
 def test__default_metrics__negative(default_evaluator1):
     """
