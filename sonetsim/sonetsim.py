@@ -204,7 +204,7 @@ class GraphSimulator:
         for c, _c in zip(self.source_communities, self.destination_communities):
             i = self.insulation[c]
             f = self.affinity[c]
-            a = [3, 2, 1]  ## Positive, Neutral, Negative
+            a = [1, 0, -1]  ## Positive, Neutral, Negative
             p_f = [f, (1 - f) / 2, (1 - f) / 2]
             p_e = [(1 - i), i / 2, i / 2]
             if c == _c:  ## internal edge
@@ -243,9 +243,9 @@ class GraphSimulator:
         for u, v, s in zip(
             self.source_nodes, self.destination_nodes, self.edge_sentiments
         ):
-            self.positive_sentiment_graph.add_edge(u, v, weight=s)
-            self.neutral_sentiment_graph.add_edge(u, v, weight=2 - np.abs(2 - s))
-            self.negative_sentiment_graph.add_edge(u, v, weight=4 - s)
+            self.positive_sentiment_graph.add_edge(u, v, weight=(2 + s))
+            self.neutral_sentiment_graph.add_edge(u, v, weight=(2 - np.abs(s)))
+            self.negative_sentiment_graph.add_edge(u, v, weight=(2 - s))
             self.count_graph.add_edge(u, v, weight=1)
 
     def simulate(self):
