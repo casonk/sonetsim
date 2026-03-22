@@ -514,18 +514,20 @@ class GraphEvaluator:
         except ZeroDivisionError:
             detected_isolation = 0  # THERE ARE NO EDGES
         try:
+            # negative external edges are encoded as -1
             detected_insulation = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[1]
+                comm_specific_external_edge_df.edge_sentiments.value_counts().get(-1, 0)
                 / len(comm_specific_external_edge_df)
             )  # % negative external edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_insulation = 0  # THERE ARE NO EXTERNAL EDGES
         try:
+            # positive internal edges are encoded as 1
             detected_affinity = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[3]
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(1, 0)
                 / len(comm_specific_internal_edge_df)
             )  # % of positive internal edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_affinity = 0  # THERE ARE NO INTERNAL EDGES
         try:
             detected_purity = (
@@ -533,7 +535,7 @@ class GraphEvaluator:
                 / len(comm_specific_node_df)
             ).prod()
             # product of % of all labels (Similar to `detected_homophily` but looks at all labels)
-        except KeyError:
+        except Exception:
             detected_purity = 0  # THERE ARE NO NODES
         try:
             detected_conductance = len(comm_specific_external_edge_df) / len(
@@ -542,32 +544,36 @@ class GraphEvaluator:
         except ZeroDivisionError:
             detected_conductance = 0  # THERE ARE NO EDGES
         try:
+            # neutral external edges are encoded as 0
             detected_equity = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[2]
+                comm_specific_external_edge_df.edge_sentiments.value_counts().get(0, 0)
                 / len(comm_specific_external_edge_df)
             )  # % neutral external edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_equity = 0  # THERE ARE NO EXTERNAL EDGES
         try:
+            # positive external edges are encoded as 1
             detected_altruism = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().loc[3]
+                comm_specific_external_edge_df.edge_sentiments.value_counts().get(1, 0)
                 / len(comm_specific_external_edge_df)
             )  # % positive external edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_altruism = 0  # THERE ARE NO EXTERNAL EDGES
         try:
+            # neutral internal edges are encoded as 0
             detected_balance = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[2]
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(0, 0)
                 / len(comm_specific_internal_edge_df)
             )  # % of neutral internal edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_balance = 0  # THERE ARE NO INTERNAL EDGES
         try:
+            # negative internal edges are encoded as -1
             detected_hostility = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().loc[1]
+                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(-1, 0)
                 / len(comm_specific_internal_edge_df)
             )  # % of negative internal edges
-        except KeyError:
+        except ZeroDivisionError:
             detected_hostility = 0  # THERE ARE NO INTERNAL EDGES
 
         return (
