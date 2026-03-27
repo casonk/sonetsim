@@ -12,4 +12,7 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
-- No durable lessons recorded yet.
+### 2026-03-26 — Keep CI on the base dependency set used by the validator
+
+- `requirements.txt` includes optional research extras and native-build packages that are not required for the public API lint/test workflow.
+- For GitHub Actions lint/test jobs, install the base dependencies needed by the validator instead of the full exported requirements set unless the job is explicitly exercising those optional integrations.
