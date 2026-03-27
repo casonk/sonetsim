@@ -66,3 +66,11 @@ poetry publish
 3. Tag: `git tag -a X.Y.Z -m "Release X.Y.Z"`
 4. Push tag: `git push origin X.Y.Z`
 5. GitHub Actions workflow publishes to PyPI automatically on release.
+
+## Agent Memory
+
+Use `./CHATHISTORY.md` as the standard local handoff file for this repo.
+
+- It is local-only and gitignored.
+- Read it after `AGENTS.md` when resuming work.
+- Keep entries brief and focused on simulation changes, validation status, blockers, and next steps.

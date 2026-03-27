@@ -12,16 +12,16 @@ Classes:
 
 # IMPORTS
 ## INTERNAL IMPORTS
+import importlib
 import random
 
 ## EXTERNAL IMPORTS
-from cdlib import algorithms
 import networkx as nx
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
-class GraphSimulator:
+class GraphSimulator:  # pylint: disable=too-many-instance-attributes
     """
     Class for simulating a graph with specified parameters.
 
@@ -36,7 +36,8 @@ class GraphSimulator:
         seed (int): Seed for random number generation.
 
     Raises:
-        AssertionError: If any of the static graph parameters are invalid.
+        TypeError: If integer or probability parameter types are invalid.
+        ValueError: If graph sizes are non-positive or probabilities fall outside [0, 1].
 
     Attributes:
         num_nodes (int): Number of nodes in the graph.
@@ -61,7 +62,7 @@ class GraphSimulator:
         count_graph (nx.DiGraph): Graph with all edges weighted to 1.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         num_nodes=50,
         num_edges=250,
@@ -77,35 +78,29 @@ class GraphSimulator:
         """
 
         # Set graph static parameters
-        self.num_nodes = num_nodes
-        self.num_edges = num_edges
-        self.num_communities = num_communities
-
-        # Check graph static parameters
-        assert self.num_nodes > 0, "Number of nodes must be greater than 0"
-        assert self.num_edges > 0, "Number of edges must be greater than 0"
-        assert self.num_communities > 0, "Number of communities must be greater than 0"
-
-        # Function to check & update simulation parameters
-        def __check_param__(param):
-            if type(param) in [int, float]:
-                if param < 0 or param > 1:
-                    raise ValueError(f"Parameter {param} must be between 0 and 1.")
-                param = np.array([param for _ in range(num_communities)])
-            else:
-                try:
-                    param = np.array(param)
-                except TypeError as exc:
-                    raise TypeError(
-                        f"Parameter {param} must be a float or array-like of floats."
-                    ) from exc
-            return param
+        self.num_nodes = self.__validate_positive_integer__(
+            value=num_nodes, name="num_nodes"
+        )
+        self.num_edges = self.__validate_positive_integer__(
+            value=num_edges, name="num_edges"
+        )
+        self.num_communities = self.__validate_positive_integer__(
+            value=num_communities, name="num_communities"
+        )
 
         # Set graph simulation parameters
-        self.homophily = __check_param__(homophily)
-        self.isolation = __check_param__(isolation)
-        self.insulation = __check_param__(insulation)
-        self.affinity = __check_param__(affinity)
+        self.homophily = self.__validate_probability_param__(
+            param=homophily, name="homophily"
+        )
+        self.isolation = self.__validate_probability_param__(
+            param=isolation, name="isolation"
+        )
+        self.insulation = self.__validate_probability_param__(
+            param=insulation, name="insulation"
+        )
+        self.affinity = self.__validate_probability_param__(
+            param=affinity, name="affinity"
+        )
 
         self.seed = seed
         self.nodes = None
@@ -120,6 +115,52 @@ class GraphSimulator:
         self.neutral_sentiment_graph = None
         self.negative_sentiment_graph = None
         self.count_graph = None
+
+    @staticmethod
+    def __validate_positive_integer__(value, name):
+        """
+        Validate that a configuration value is a positive integer.
+        """
+        if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
+            raise TypeError(f"{name} must be an integer.")
+
+        if value <= 0:
+            raise ValueError(f"{name} must be greater than 0.")
+
+        return value
+
+    def __validate_probability_param__(self, param, name):
+        """
+        Validate and normalize a probability parameter.
+        """
+        if isinstance(param, (int, float, np.integer, np.floating)) and not isinstance(
+            param, bool
+        ):
+            param_value = float(param)
+            if not 0 <= param_value <= 1:
+                raise ValueError(f"{name} must be between 0 and 1.")
+
+            return np.full(self.num_communities, param_value, dtype=float)
+
+        try:
+            param_array = np.asarray(param, dtype=float)
+        except (TypeError, ValueError) as exc:
+            raise TypeError(
+                f"{name} must be a float or a one-dimensional array-like of floats."
+            ) from exc
+
+        if param_array.ndim != 1:
+            raise ValueError(f"{name} must be one-dimensional.")
+
+        if len(param_array) != self.num_communities:
+            raise ValueError(
+                f"{name} must contain exactly {self.num_communities} values."
+            )
+
+        if ((param_array < 0) | (param_array > 1)).any():
+            raise ValueError(f"{name} must contain only values between 0 and 1.")
+
+        return param_array
 
     def __initialize_seed__(self):
         """
@@ -156,7 +197,7 @@ class GraphSimulator:
         for c in self.communities:
             h = self.homophily[c]
             a = [c] + [_c for _c in pd.Series(self.communities).unique() if _c != c]
-            p = [h] + [((1 - h) / (len(a) - 1))] * (len(a) - 1)
+            p = [h] + [(1 - h) / (len(a) - 1)] * (len(a) - 1)
             labels.append(
                 np.random.choice(a=a, size=1, p=p)[0]
             )  ## Probabilities based on community homophily
@@ -176,7 +217,7 @@ class GraphSimulator:
         for c in self.source_communities:
             i = self.isolation[c]
             a = [c] + [_c for _c in pd.Series(self.communities).unique() if _c != c]
-            p = [i] + [((1 - i) / (len(a) - 1))] * (len(a) - 1)
+            p = [i] + [(1 - i) / (len(a) - 1)] * (len(a) - 1)
             destination_communities.append(
                 np.random.choice(a=a, size=1, p=p)[0]
             )  ## Probabilities based on community isolation
@@ -184,20 +225,12 @@ class GraphSimulator:
 
         # Resolve destination nodes from destination communities
         destination_nodes = []
-        try:
-            for c in self.destination_communities:
-                a = self.nodes[np.where(self.communities == c)]
-                destination_nodes.append(
-                    np.random.choice(a=a, size=1)[0]
-                )  ## Uniform distribution across nodes in destination community
-            self.destination_nodes = np.array(destination_nodes)
-        except Exception as e:
-            print("a", a)
-            print("c", c)
-            print("nodes", self.nodes)
-            print("communities", self.communities)
-            print("destination_communities", self.destination_communities)
-            raise e
+        for c in self.destination_communities:
+            a = self.nodes[np.where(self.communities == c)]
+            destination_nodes.append(
+                np.random.choice(a=a, size=1)[0]
+            )  ## Uniform distribution across nodes in destination community
+        self.destination_nodes = np.array(destination_nodes)
 
         # Initialize edge sentiments
         edge_sentiments = []
@@ -243,9 +276,9 @@ class GraphSimulator:
         for u, v, s in zip(
             self.source_nodes, self.destination_nodes, self.edge_sentiments
         ):
-            self.positive_sentiment_graph.add_edge(u, v, weight=(2 + s))
-            self.neutral_sentiment_graph.add_edge(u, v, weight=(2 - np.abs(s)))
-            self.negative_sentiment_graph.add_edge(u, v, weight=(2 - s))
+            self.positive_sentiment_graph.add_edge(u, v, weight=2 + s)
+            self.neutral_sentiment_graph.add_edge(u, v, weight=2 - np.abs(s))
+            self.negative_sentiment_graph.add_edge(u, v, weight=2 - s)
             self.count_graph.add_edge(u, v, weight=1)
 
     def simulate(self):
@@ -268,7 +301,7 @@ class GraphSimulator:
         )
 
 
-class GraphEvaluator:
+class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
     """
     Class for evaluating a graph using a specified algorithm.
 
@@ -290,7 +323,7 @@ class GraphEvaluator:
         metrics_df (pd.DataFrame): DataFrame containing evaluation metrics.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self, simulator, seed=0, algorithm="louvain", resolution=1.0, alpha=0.5
     ) -> None:
         """
@@ -298,7 +331,7 @@ class GraphEvaluator:
         """
         self.simulator = simulator
         self.seed = seed
-        self.algorithm = algorithm
+        self.algorithm = None
         self.resolution = resolution
         self.alpha = alpha
         self.graph = simulator.count_graph
@@ -307,6 +340,18 @@ class GraphEvaluator:
         self.edge_df = None
         self.metrics_df = None
         self.graph_map = {"count": 0, "positive": 1, "neutral": 2, "negative": 3}
+        self.graph_attribute_map = {
+            "count": "count_graph",
+            0: "count_graph",
+            "positive": "positive_sentiment_graph",
+            1: "positive_sentiment_graph",
+            "neutral": "neutral_sentiment_graph",
+            2: "neutral_sentiment_graph",
+            "negative": "negative_sentiment_graph",
+            3: "negative_sentiment_graph",
+        }
+        self.supported_algorithms = {"louvain", "leiden", "eva", "infomap"}
+        self.set_algorithm(algorithm)
 
     def __initialize_seed__(self):
         """
@@ -325,6 +370,37 @@ class GraphEvaluator:
         self.seed = seed
         self.__initialize_seed__()
 
+    @staticmethod
+    def __get_cdlib_algorithms__():
+        """
+        Import cdlib algorithms lazily to avoid import-time side effects.
+        """
+        return importlib.import_module("cdlib.algorithms")
+
+    def __require_simulated_graphs__(self):
+        """
+        Ensure the simulator has been run before evaluation.
+        """
+        required_attributes = (
+            "nodes",
+            "communities",
+            "labels",
+            "source_nodes",
+            "source_communities",
+            "destination_communities",
+            "destination_nodes",
+            "edge_sentiments",
+            "positive_sentiment_graph",
+            "neutral_sentiment_graph",
+            "negative_sentiment_graph",
+            "count_graph",
+        )
+
+        if any(getattr(self.simulator, attr) is None for attr in required_attributes):
+            raise RuntimeError(
+                "GraphEvaluator requires a simulated graph. Call simulator.simulate() first."
+            )
+
     def set_graph(self, graph="count"):
         """
         Set the graph to evaluate.
@@ -333,14 +409,16 @@ class GraphEvaluator:
             graph (str) or (int): The graph to set.
             Options are "count" or 0, "positive" or 1, "neutral" or 2, "negative" or 3.
         """
-        if (graph == "count") | (graph == 0):
-            self.graph = self.simulator.count_graph
-        elif (graph == "positive") | (graph == 1):
-            self.graph = self.simulator.positive_sentiment_graph
-        elif (graph == "neutral") | (graph == 2):
-            self.graph = self.simulator.neutral_sentiment_graph
-        elif (graph == "negative") | (graph == 3):
-            self.graph = self.simulator.negative_sentiment_graph
+        self.__require_simulated_graphs__()
+
+        if graph not in self.graph_attribute_map:
+            raise ValueError(
+                'graph must be one of "count", "positive", "neutral", "negative", '
+                "0, 1, 2, or 3."
+            )
+
+        self.graph = getattr(self.simulator, self.graph_attribute_map[graph])
+        return self.graph
 
     def set_algorithm(self, algorithm):
         """
@@ -349,6 +427,12 @@ class GraphEvaluator:
         Args:
             algorithm (str): The algorithm to set.
         """
+        if algorithm not in self.supported_algorithms:
+            raise ValueError(
+                f'Algorithm "{algorithm}" not supported. Must be one of '
+                f"{sorted(self.supported_algorithms)}."
+            )
+
         self.algorithm = algorithm
 
     def __initialize_dataframes__(self):
@@ -390,7 +474,7 @@ class GraphEvaluator:
         self.node_df = node_df
         self.edge_df = edge_df
 
-    def detect_communities(self, graph=False, algorithm=False):
+    def detect_communities(self, graph=None, algorithm=None):
         """
         Detects communities in the graph using the specified algorithm.
 
@@ -402,13 +486,15 @@ class GraphEvaluator:
             list: A list of sets, where each set represents a community.
 
         Raises:
-            ValueError: If the specified algorithm is not supported.
+            RuntimeError: If the simulator has not been run yet.
+            ValueError: If the specified graph or algorithm is not supported.
         """
+        self.__require_simulated_graphs__()
 
-        if graph:
+        if graph is not None:
             self.set_graph(graph)
 
-        if algorithm:
+        if algorithm is not None:
             self.set_algorithm(algorithm)
 
         self.__initialize_seed__()
@@ -421,17 +507,19 @@ class GraphEvaluator:
                 seed=self.seed,
             )
         elif self.algorithm == "leiden":
+            cdlib_algorithms = self.__get_cdlib_algorithms__()
             self.communities = [
                 set(community)
-                for community in algorithms.leiden(
+                for community in cdlib_algorithms.leiden(
                     g_original=self.graph,
                     weights=[e[2] for e in self.graph.edges(data="weight")],
                 ).communities
             ]
         elif self.algorithm == "eva":
+            cdlib_algorithms = self.__get_cdlib_algorithms__()
             self.communities = [
                 set(community)
-                for community in algorithms.eva(
+                for community in cdlib_algorithms.eva(
                     g_original=self.graph.to_undirected(),
                     labels={
                         n: {"label": self.graph.nodes[n]["label"]}
@@ -443,26 +531,19 @@ class GraphEvaluator:
                 ).communities
             ]
         elif self.algorithm == "infomap":
+            cdlib_algorithms = self.__get_cdlib_algorithms__()
             self.communities = [
                 set(community)
-                for community in algorithms.infomap(
+                for community in cdlib_algorithms.infomap(
                     g_original=self.graph,
                     flags="-d",
                 ).communities
             ]
-        else:
-            raise ValueError(
-                f"""
-                        Algorithm {self.algorithm} not supported.
-                        Must be one of ["louvain", "leiden", "eva", "infomap"].
-                        """
-            )
-
         self.__initialize_dataframes__()
 
         return self.communities
 
-    def evaluate_single_community(self, community):
+    def evaluate_single_community(self, community):  # pylint: disable=too-many-locals
         """
         Evaluate a single community based on various metrics.
 
@@ -529,14 +610,14 @@ class GraphEvaluator:
             )  # % of positive internal edges
         except ZeroDivisionError:
             detected_affinity = 0  # THERE ARE NO INTERNAL EDGES
-        try:
+        if len(comm_specific_node_df) == 0:
+            detected_purity = 0  # THERE ARE NO NODES
+        else:
             detected_purity = (
                 comm_specific_node_df.set_label.value_counts()
                 / len(comm_specific_node_df)
             ).prod()
             # product of % of all labels (Similar to `detected_homophily` but looks at all labels)
-        except Exception:
-            detected_purity = 0  # THERE ARE NO NODES
         try:
             detected_conductance = len(comm_specific_external_edge_df) / len(
                 comm_specific_edge_df
@@ -640,31 +721,33 @@ class GraphEvaluator:
 
         return self.metrics_df
 
-    def evaluate_single_graph(self, graph=False, algorithm=False):
+    def evaluate_single_graph(self, graph=None, algorithm=None):
         """
         Evaluates the communities in the graph.
 
         Parameters:
-        - graph (bool): If True, the graph will be displayed.
-        - algorithm (str): The algorithm to use for detection.
+        - graph (str|int|None): The graph identifier to evaluate.
+        - algorithm (str|None): The algorithm to use for detection.
 
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
         """
+        self.__require_simulated_graphs__()
         self.detect_communities(graph=graph, algorithm=algorithm)
         self.evaluate_all_communities()
         return self.metrics_df
 
-    def evaluate(self, algorithm=False):
+    def evaluate(self, algorithm=None):
         """
         Evaluates the communities in all graphs.
 
         Parameters:
-        - algorithm (str): The algorithm to use for detection.
+        - algorithm (str|None): The algorithm to use for detection.
 
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
         """
+        self.__require_simulated_graphs__()
         cnt_df = self.evaluate_single_graph(graph=0, algorithm=algorithm)
         pos_df = self.evaluate_single_graph(graph=1, algorithm=algorithm)
         neu_df = self.evaluate_single_graph(graph=2, algorithm=algorithm)
@@ -676,7 +759,7 @@ class GraphEvaluator:
         self.metrics_df = pd.concat([cnt_df, pos_df, neu_df, neg_df])
         return self.metrics_df
 
-    def evaluate_algorithms(self, algorithms=["louvain", "leiden", "eva", "infomap"]):
+    def evaluate_algorithms(self, algorithms=None):
         """
         Evaluates the communities in all graphs.
 
@@ -686,9 +769,14 @@ class GraphEvaluator:
         Returns:
         - metrics_df (DataFrame): The metrics dataframe containing the evaluation results.
         """
+        self.__require_simulated_graphs__()
+
+        if algorithms is None:
+            algorithms = ["louvain", "leiden", "eva", "infomap"]
+
         alg_dfs = []
         for algorithm in algorithms:
-            alg_df = self.evaluate(algorithm=algorithm) #.copy(deep=True)
+            alg_df = self.evaluate(algorithm=algorithm)
             alg_df["algorithm"] = algorithm
             alg_dfs.append(alg_df)
         self.metrics_df = pd.concat(alg_dfs)
