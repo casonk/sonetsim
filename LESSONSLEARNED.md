@@ -16,3 +16,8 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 - `requirements.txt` includes optional research extras and native-build packages that are not required for the public API lint/test workflow.
 - For GitHub Actions lint/test jobs, install the base dependencies needed by the validator instead of the full exported requirements set unless the job is explicitly exercising those optional integrations.
+
+### 2026-03-27 — `sonetsim` architecture is a simulation-evaluation loop, not just a package boundary
+
+- When documenting or changing `sonetsim`, center the architecture on `GraphSimulator` producing four weighted graph variants and `GraphEvaluator` re-running community detection plus metrics over those variants.
+- Treat `sonetsim/tests/simulator_validator.py` as a validator of invariants for that experiment loop, not as a generic afterthought.

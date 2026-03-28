@@ -43,6 +43,14 @@ black .                               # format
 pylint sonetsim/ --fail-under=10      # lint
 ```
 
+## Architecture
+
+`sonetsim` is organized around a simulation-evaluation loop:
+
+- `GraphSimulator` validates inputs, seeds RNG state, assigns communities and labels, generates directed edges and sentiments, and emits four weighted graph views: count, positive, neutral, and negative.
+- `GraphEvaluator` selects one of those graph views, runs community detection (`louvain`, `leiden`, `eva`, or `infomap`), builds node and edge dataframes, and computes community-level metrics.
+- `sonetsim/tests/simulator_validator.py` enforces package-export behavior, seeded reproducibility, supported algorithm coverage, and metric invariants across the graph variants.
+
 ## License
 
 [LGPL-2.1](LICENSE)
