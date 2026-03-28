@@ -7,9 +7,9 @@ A Python library for **so**cial **net**work **sim**ulation and community detecti
 ## Repository Layout
 
 - `sonetsim/` — Main Python package
-  - `__init__.py` — Package init
-  - `simulator.py` — Core simulation engine
-  - `tests/simulator_validator.py` — Pytest test suite (~876 lines)
+  - `__init__.py` — Public package surface exporting `GraphSimulator`, `GraphEvaluator`, and `__version__`
+  - `sonetsim.py` — Core simulation and evaluation engine
+  - `tests/simulator_validator.py` — Pytest validator for package exports, seeded simulation, algorithm support, and metric invariants
 - `pyproject.toml` — Poetry-based package metadata and dependency management
 - `poetry.lock` — Locked dependency versions
 - `requirements.txt` — Pip-compatible dependency list
@@ -57,6 +57,8 @@ poetry publish
 - Update `requirements.txt` when changing `pyproject.toml` dependencies.
 - When bumping version, update `pyproject.toml` and create a matching git tag.
 - Preserve the existing test patterns in `simulator_validator.py` — use pytest fixtures.
+- Keep the public package interface in `sonetsim/__init__.py` aligned with the implementation in `sonetsim/sonetsim.py`.
+- Architecture changes should describe the full experiment loop: parameter validation -> seeded simulation -> weighted graph variants -> community detection -> metrics dataframes.
 - Do not add runtime dependencies without strong justification.
 
 ## Release Process
@@ -77,12 +79,12 @@ Start with:
 - `./util-repos/traction-control/LESSONSLEARNED.md`
 
 Shared implementation repos available portfolio-wide:
-- `./util-repos/archility` for architecture inventory, blueprint scaffolding, and architecture-documentation drift checks
+- `./util-repos/archility` for architecture toolchain bootstrap/render orchestration, Graphviz-capable diagram support, deterministic starter scaffolding, agentic architecture authoring, and architecture-documentation drift checks
 - `./util-repos/auto-pass` for KeePassXC-backed password management and secret retrieval/update flows
 - `./util-repos/nordility` for NordVPN-based VPN switching and connection orchestration
 - `./util-repos/shock-relay` for external messaging across supported providers such as Signal, Telegram, Twilio SMS, WhatsApp, and Gmail IMAP
 
-When another repo needs architecture inventory/scaffolding, password management, VPN switching, or external messaging, prefer integrating with these repos instead of re-implementing the capability locally.
+When another repo needs architecture toolchain bootstrap/rendering, architecture inventory/scaffolding, password management, VPN switching, or external messaging, prefer integrating with these repos instead of re-implementing the capability locally.
 
 ## Agent Memory
 

@@ -1,0 +1,34 @@
+@startuml
+!pragma layout smetana
+title sonetsim Repository Architecture
+skinparam shadowing false
+skinparam defaultFontName Monospace
+
+actor "Package consumer\nor research user" as user
+rectangle "sonetsim/__init__.py\npublic package surface\nGraphSimulator, GraphEvaluator, __version__" as package_surface #DBEAFE
+rectangle "GraphSimulator\nvalidate params\nseed RNG\nassign communities and labels\ngenerate edges and sentiments" as simulator #FEF3C7
+rectangle "Graph variants\ncount, positive,\nneutral, negative" as graph_variants #FEF3C7
+rectangle "GraphEvaluator\nselect graph variant\nchoose algorithm\nbuild node/edge frames" as evaluator #DCFCE7
+rectangle "Community detection backends\nnetworkx louvain\ncdlib leiden, eva, infomap" as algorithms #DCFCE7
+rectangle "Metrics dataframe\nhomophily, isolation,\ninsulation, affinity, purity,\nconductance, equity, altruism,\nbalance, hostility" as metrics #E0F2FE
+rectangle "Algorithm and weight sweeps\nevaluate()\nevaluate_algorithms()" as experiment_loop #E0F2FE
+rectangle "Validator suite\nsonetsim/tests/simulator_validator.py" as tests #E2E8F0
+rectangle "Packaging and release\npyproject.toml\nrequirements.txt\nGitHub Actions" as packaging #E2E8F0
+
+user --> package_surface : import sonetsim
+package_surface --> simulator
+package_surface --> evaluator
+
+simulator --> graph_variants : simulate()
+graph_variants --> evaluator : set_graph()
+evaluator --> algorithms : detect_communities()
+evaluator --> metrics : evaluate_single_graph()
+metrics --> experiment_loop : concatenate results
+evaluator --> experiment_loop : evaluate across graphs and algorithms
+
+tests --> package_surface : export and import checks
+tests --> simulator : init, validation, seeding checks
+tests --> evaluator : algorithm and metric invariants
+packaging --> package_surface : published interface and CI contract
+packaging --> tests : lint and validator runs
+@enduml

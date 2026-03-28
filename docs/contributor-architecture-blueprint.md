@@ -1,28 +1,41 @@
 # Contributor Architecture Blueprint
 
-This document is a concise map of how `sonetsim` exposes its simulation library, validation suite, and release metadata.
+This document is a concise map of how `sonetsim` turns simulation parameters into weighted graph variants, detected communities, and evaluation metrics suitable for research comparison.
 
 ## High-Level Layers
 
-1. Package surface (`sonetsim/__init__.py`)
-   - Re-exports the public library interface.
-   - Public API changes should be intentional because the package is published.
-2. Simulation engine (`sonetsim/sonetsim.py`)
-   - Core network simulation and community-detection logic live here.
-   - Algorithm changes should be paired with validation updates.
-3. Test layer (`sonetsim/tests/simulator_validator.py`)
-   - The validator suite is the main protection against behavioral regressions.
-   - Extend the existing style instead of introducing a parallel testing pattern.
-4. Packaging and release layer (`pyproject.toml`, `requirements.txt`, GitHub workflows)
-   - `pyproject.toml` is the source of truth for package metadata and versions.
-   - CI and publish workflows enforce formatting, linting, testing, and release automation.
+1. Public package surface (`sonetsim/__init__.py`)
+   - The package re-exports `GraphSimulator`, `GraphEvaluator`, and `__version__`.
+   - Because the project is published to PyPI, preserve that import surface intentionally.
+2. Simulation layer (`GraphSimulator` in `sonetsim/sonetsim.py`)
+   - Validates graph size and probability inputs.
+   - Seeds Python and NumPy RNG state.
+   - Generates node communities, labels, source and destination edges, and edge sentiments.
+   - Materializes four directed graph variants: count, positive sentiment, neutral sentiment, and negative sentiment.
+3. Evaluation layer (`GraphEvaluator` in `sonetsim/sonetsim.py`)
+   - Requires a prior simulation run.
+   - Selects one graph view at a time and runs community detection with `louvain`, `leiden`, `eva`, or `infomap`.
+   - Builds node and edge DataFrames and computes community-level metrics such as homophily, isolation, insulation, affinity, conductance, and hostility.
+   - Can aggregate results across all graph weight methods and across multiple algorithms.
+4. Validation and release layer (`sonetsim/tests/simulator_validator.py`, `pyproject.toml`, workflows)
+   - The validator suite checks package exports, import quietness, deterministic seeding, invalid-input handling, and metric invariants.
+   - Packaging metadata and CI workflows keep the published package, dependency contract, and release flow aligned.
+
+## Key Flows
+
+- Simulation flow: constructor parameters -> validation -> seeded graph-data generation -> four weighted `networkx.DiGraph` instances
+- Single-graph evaluation flow: simulated graph variant -> community detection -> node and edge DataFrames -> community metrics DataFrame
+- Full experiment flow: one simulator run -> all four graph variants -> one or more algorithms -> concatenated metrics DataFrame with `weight_method` and optional `algorithm`
+- Validation flow: pytest fixtures -> simulator/evaluator APIs -> invariants on reproducibility, supported algorithms, and metric ranges
 
 ## Key Entry Points
 
-- `poetry run pytest sonetsim/tests/`
-- `poetry build`
-- `.github/workflows/black-pylint-pytest.yml`
-- `.github/workflows/python-publish.yml`
+- `GraphSimulator(...).simulate()`: generate the graph variants
+- `GraphEvaluator(simulator=...).evaluate()`: evaluate all four weight methods for one algorithm
+- `GraphEvaluator(...).evaluate_algorithms(...)`: compare multiple algorithms against the same simulated network
+- `sonetsim/tests/simulator_validator.py`: public API and invariant validator
+- `.github/workflows/black-pylint-pytest.yml`: lint and test enforcement
+- `.github/workflows/python-publish.yml`: release publication path
 
 ## Validation
 
@@ -30,5 +43,7 @@ This document is a concise map of how `sonetsim` exposes its simulation library,
 poetry install
 poetry run pytest sonetsim/tests/
 black --check .
-pylint sonetsim/
+pylint sonetsim/ --fail-under=10
 ```
+
+When simulation or evaluation behavior changes, verify both the direct API behavior and the metric invariants enforced by the validator suite.
