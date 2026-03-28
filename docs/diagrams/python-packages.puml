@@ -1,0 +1,13 @@
+@startuml packages_sonetsim
+set namespaceSeparator none
+package "sonetsim" as sonetsim {
+}
+package "sonetsim.sonetsim" as sonetsim.sonetsim {
+}
+package "sonetsim.tests" as sonetsim.tests {
+}
+package "sonetsim.tests.simulator_validator" as sonetsim.tests.simulator_validator {
+}
+sonetsim --> sonetsim
+sonetsim.tests.simulator_validator --> sonetsim
+@enduml

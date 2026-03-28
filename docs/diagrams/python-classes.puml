@@ -1,0 +1,51 @@
+@startuml classes_sonetsim
+set namespaceSeparator none
+class "GraphEvaluator" as sonetsim.sonetsim.GraphEvaluator {
+  algorithm : NoneType
+  alpha : float
+  communities : NoneType
+  edge_df : NoneType
+  graph
+  graph_attribute_map : dict
+  graph_map : dict
+  metrics_df : NoneType
+  node_df : NoneType
+  resolution : float
+  seed : int
+  simulator
+  supported_algorithms : set
+  detect_communities(graph, algorithm)
+  evaluate(algorithm)
+  evaluate_algorithms(algorithms)
+  evaluate_all_communities()
+  evaluate_single_community(community)
+  evaluate_single_graph(graph, algorithm)
+  set_algorithm(algorithm)
+  set_graph(graph)
+  set_seed(seed)
+}
+class "GraphSimulator" as sonetsim.sonetsim.GraphSimulator {
+  affinity
+  communities : NoneType
+  count_graph : NoneType
+  destination_communities : NoneType, ndarray
+  destination_nodes : NoneType, ndarray
+  edge_sentiments : NoneType, ndarray
+  homophily
+  insulation
+  isolation
+  labels : NoneType, ndarray
+  negative_sentiment_graph : NoneType
+  neutral_sentiment_graph : NoneType
+  nodes : NoneType
+  num_communities : int
+  num_edges : int
+  num_nodes : int
+  positive_sentiment_graph : NoneType
+  seed : int
+  source_communities : NoneType, ndarray
+  source_nodes : NoneType
+  set_seed(seed)
+  simulate()
+}
+@enduml
