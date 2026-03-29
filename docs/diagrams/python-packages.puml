@@ -1,13 +1,11 @@
 @startuml packages_sonetsim
 set namespaceSeparator none
-package "sonetsim" as sonetsim {
-}
-package "sonetsim.sonetsim" as sonetsim.sonetsim {
-}
-package "sonetsim.tests" as sonetsim.tests {
-}
-package "sonetsim.tests.simulator_validator" as sonetsim.tests.simulator_validator {
-}
+top to bottom direction
+skinparam componentStyle rectangle
+rectangle "sonetsim\n1 child pkg, 1 module\n4 python files\nexamples: sonetsim, tests" as sonetsim
+rectangle "sonetsim.sonetsim\n1 python file" as sonetsim.sonetsim
+rectangle "sonetsim.tests\n0 child pkg, 1 module\n2 python files\nexamples: simulator_validator" as sonetsim.tests
+rectangle "sonetsim.tests.simulator_validator\n1 python file" as sonetsim.tests.simulator_validator
 sonetsim --> sonetsim
 sonetsim.tests.simulator_validator --> sonetsim
 @enduml
