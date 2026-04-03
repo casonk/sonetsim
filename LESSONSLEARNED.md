@@ -16,6 +16,11 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 - Keep local-only, private, reference-only, or generated boundaries explicit so published or runtime behavior is not confused with offline material or non-committable inputs.
 - Re-run repo-appropriate validation after changing generated artifacts, diagrams, workflows, or other CI-facing files so formatting and compatibility issues are caught before push.
 
+### 2026-04-03 — Older CI matrices must not require dyno-lab unconditionally
+
+- `dyno-lab` currently requires Python `>=3.10`, while `sonetsim` still supports Python `3.8` through `3.10`.
+- Keep `pytest_plugins` loading for `dyno_lab.fixtures` conditional in `sonetsim/tests/conftest.py` so older CI jobs continue to run when that optional package is unavailable.
+
 ### 2026-03-26 — Keep CI on the base dependency set used by the validator
 
 - `requirements.txt` includes optional research extras and native-build packages that are not required for the public API lint/test workflow.
