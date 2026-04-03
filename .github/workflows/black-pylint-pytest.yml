@@ -15,10 +15,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: psf/black@stable
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          options: "--verbose --diff"
-          jupyter: true
+          python-version: '3.10'
+      - name: Install formatters
+        run: pip install black ruff
+      - name: Check formatting (ruff format)
+        run: ruff format --check .
+      # TODO: remove black once ruff format is confirmed stable portfolio-wide
+      - name: Check formatting (black — deprecated)
+        run: black --check --diff . || echo "NOTE: black found style differences (deprecated — ruff format is authoritative)"
 
   lint-test:
     needs: black
