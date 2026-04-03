@@ -25,7 +25,8 @@ jobs:
         run: ruff format --check .
       # TODO: remove black once ruff format is confirmed stable portfolio-wide
       - name: Check formatting (black — deprecated)
-        run: black --check --diff . || echo "NOTE: black found style differences (deprecated — ruff format is authoritative)"
+        run: |
+          black --check --diff . || echo "NOTE: black found style differences (deprecated — ruff format is authoritative)"
 
   lint-test:
     needs: black
