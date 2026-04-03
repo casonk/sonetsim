@@ -12,7 +12,7 @@
 <!-- sonetsim -->
 <g id="node1" class="node">
 <title>sonetsim</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#c04040" stroke="black" cx="41.54" cy="-18" rx="32.49" ry="18"/>
+<ellipse fill="#cc3333" stroke="black" cx="41.54" cy="-18" rx="32.49" ry="18"/>
 <text xml:space="preserve" text-anchor="middle" x="41.54" y="-13.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">sonetsim</text>
 </g>
 <!-- sonetsim_sonetsim -->
