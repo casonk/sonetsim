@@ -63,9 +63,9 @@ def _assert_metric_invariants(metrics_df):
 
 
 def _assert_weight_methods(metrics_df):
-    assert (
-        metrics_df["weight_method"].isin([0, 1, 2, 3]).all()
-    ), "Weight method (e.g. graph type) must be one of the supported values"
+    assert metrics_df["weight_method"].isin([0, 1, 2, 3]).all(), (
+        "Weight method (e.g. graph type) must be one of the supported values"
+    )
 
 
 @pytest.fixture
@@ -136,38 +136,38 @@ def test__default_init(default_simulator1):
     assert default_simulator1.num_nodes == 50, "Number of nodes must default to 50"
     assert default_simulator1.num_edges == 250, "Number of edges must default to 250"
     assert default_simulator1.num_communities == 5, "Number of communities must default to 5"
-    assert (
-        default_simulator1.homophily == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
-    ).all(), "Homophily must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
-    assert (
-        default_simulator1.isolation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
-    ).all(), "Isolation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
-    assert (
-        default_simulator1.insulation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
-    ).all(), "Insulation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
-    assert (
-        default_simulator1.affinity == np.array([0.5, 0.5, 0.5, 0.5, 0.5])
-    ).all(), "Affinity must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
+    assert (default_simulator1.homophily == np.array([0.5, 0.5, 0.5, 0.5, 0.5])).all(), (
+        "Homophily must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
+    )
+    assert (default_simulator1.isolation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])).all(), (
+        "Isolation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
+    )
+    assert (default_simulator1.insulation == np.array([0.5, 0.5, 0.5, 0.5, 0.5])).all(), (
+        "Insulation must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
+    )
+    assert (default_simulator1.affinity == np.array([0.5, 0.5, 0.5, 0.5, 0.5])).all(), (
+        "Affinity must default to np.array([0.5, 0.5, 0.5, 0.5, 0.5])"
+    )
     assert default_simulator1.seed == 0, "Seed must default to 0"
     assert default_simulator1.nodes is None, "Nodes must be None"
     assert default_simulator1.communities is None, "Communities must be None"
     assert default_simulator1.labels is None, "Labels must be None"
     assert default_simulator1.source_nodes is None, "Source nodes must be None"
     assert default_simulator1.source_communities is None, "Source communities must be None"
-    assert (
-        default_simulator1.destination_communities is None
-    ), "Destination communities must be None"
+    assert default_simulator1.destination_communities is None, (
+        "Destination communities must be None"
+    )
     assert default_simulator1.destination_nodes is None, "Destination nodes must be None"
     assert default_simulator1.edge_sentiments is None, "Edge sentiments must be None"
-    assert (
-        default_simulator1.positive_sentiment_graph is None
-    ), "Positive sentiment graph must be None"
-    assert (
-        default_simulator1.neutral_sentiment_graph is None
-    ), "Neutral sentiment graph must be None"
-    assert (
-        default_simulator1.negative_sentiment_graph is None
-    ), "Negative sentiment graph must be None"
+    assert default_simulator1.positive_sentiment_graph is None, (
+        "Positive sentiment graph must be None"
+    )
+    assert default_simulator1.neutral_sentiment_graph is None, (
+        "Neutral sentiment graph must be None"
+    )
+    assert default_simulator1.negative_sentiment_graph is None, (
+        "Negative sentiment graph must be None"
+    )
     assert default_simulator1.count_graph is None, "Count graph must be None"
 
 
@@ -200,13 +200,13 @@ def test__custom_init(custom_simulator1):
     assert custom_simulator1.destination_communities is None, "Destination communities must be None"
     assert custom_simulator1.destination_nodes is None, "Destination nodes must be None"
     assert custom_simulator1.edge_sentiments is None, "Edge sentiments must be None"
-    assert (
-        custom_simulator1.positive_sentiment_graph is None
-    ), "Positive sentiment graph must be None"
+    assert custom_simulator1.positive_sentiment_graph is None, (
+        "Positive sentiment graph must be None"
+    )
     assert custom_simulator1.neutral_sentiment_graph is None, "Neutral sentiment graph must be None"
-    assert (
-        custom_simulator1.negative_sentiment_graph is None
-    ), "Negative sentiment graph must be None"
+    assert custom_simulator1.negative_sentiment_graph is None, (
+        "Negative sentiment graph must be None"
+    )
     assert custom_simulator1.count_graph is None, "Count graph must be None"
 
 
@@ -334,9 +334,9 @@ def test__all_metrics__all(default_evaluator1):
     default_evaluator1.evaluate_algorithms(algorithms=available_algorithms)
     _assert_metric_invariants(default_evaluator1.metrics_df)
     _assert_weight_methods(default_evaluator1.metrics_df)
-    assert (
-        default_evaluator1.metrics_df["algorithm"].isin(available_algorithms).all()
-    ), "Algorithm must be one of the supported values"
+    assert default_evaluator1.metrics_df["algorithm"].isin(available_algorithms).all(), (
+        "Algorithm must be one of the supported values"
+    )
 
 
 def test__evaluate_without_simulate__raises(default_simulator1):
