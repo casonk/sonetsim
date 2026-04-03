@@ -2,10 +2,13 @@
 set namespaceSeparator none
 top to bottom direction
 skinparam componentStyle rectangle
-rectangle "sonetsim\n1 child pkg, 1 module\n4 python files\nexamples: sonetsim, tests" as sonetsim
+rectangle "sonetsim\n1 child pkg, 1 module\n6 python files\nexamples: sonetsim, tests" as sonetsim
 rectangle "sonetsim.sonetsim\n1 python file" as sonetsim.sonetsim
-rectangle "sonetsim.tests\n0 child pkg, 1 module\n2 python files\nexamples: simulator_validator" as sonetsim.tests
+rectangle "sonetsim.tests\n0 child pkg, 3 modules\n4 python files\nexamples: conftest, simulator_validator, test_simulator" as sonetsim.tests
+rectangle "sonetsim.tests.conftest\n1 python file" as sonetsim.tests.conftest
 rectangle "sonetsim.tests.simulator_validator\n1 python file" as sonetsim.tests.simulator_validator
+rectangle "sonetsim.tests.test_simulator\n1 python file" as sonetsim.tests.test_simulator
 sonetsim --> sonetsim
 sonetsim.tests.simulator_validator --> sonetsim
+sonetsim.tests.test_simulator --> sonetsim
 @enduml
