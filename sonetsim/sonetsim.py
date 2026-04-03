@@ -78,29 +78,17 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
         """
 
         # Set graph static parameters
-        self.num_nodes = self.__validate_positive_integer__(
-            value=num_nodes, name="num_nodes"
-        )
-        self.num_edges = self.__validate_positive_integer__(
-            value=num_edges, name="num_edges"
-        )
+        self.num_nodes = self.__validate_positive_integer__(value=num_nodes, name="num_nodes")
+        self.num_edges = self.__validate_positive_integer__(value=num_edges, name="num_edges")
         self.num_communities = self.__validate_positive_integer__(
             value=num_communities, name="num_communities"
         )
 
         # Set graph simulation parameters
-        self.homophily = self.__validate_probability_param__(
-            param=homophily, name="homophily"
-        )
-        self.isolation = self.__validate_probability_param__(
-            param=isolation, name="isolation"
-        )
-        self.insulation = self.__validate_probability_param__(
-            param=insulation, name="insulation"
-        )
-        self.affinity = self.__validate_probability_param__(
-            param=affinity, name="affinity"
-        )
+        self.homophily = self.__validate_probability_param__(param=homophily, name="homophily")
+        self.isolation = self.__validate_probability_param__(param=isolation, name="isolation")
+        self.insulation = self.__validate_probability_param__(param=insulation, name="insulation")
+        self.affinity = self.__validate_probability_param__(param=affinity, name="affinity")
 
         self.seed = seed
         self.nodes = None
@@ -133,9 +121,7 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
         """
         Validate and normalize a probability parameter.
         """
-        if isinstance(param, (int, float, np.integer, np.floating)) and not isinstance(
-            param, bool
-        ):
+        if isinstance(param, (int, float, np.integer, np.floating)) and not isinstance(param, bool):
             param_value = float(param)
             if not 0 <= param_value <= 1:
                 raise ValueError(f"{name} must be between 0 and 1.")
@@ -153,9 +139,7 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
             raise ValueError(f"{name} must be one-dimensional.")
 
         if len(param_array) != self.num_communities:
-            raise ValueError(
-                f"{name} must contain exactly {self.num_communities} values."
-            )
+            raise ValueError(f"{name} must contain exactly {self.num_communities} values.")
 
         if ((param_array < 0) | (param_array > 1)).any():
             raise ValueError(f"{name} must contain only values between 0 and 1.")
@@ -208,9 +192,7 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
             a=self.nodes, size=self.num_edges, replace=True
         )  ## Uniform distribution across nodes
         # Resolve source communities from source nodes
-        self.source_communities = np.array(
-            [self.communities[n] for n in self.source_nodes]
-        )
+        self.source_communities = np.array([self.communities[n] for n in self.source_nodes])
 
         # Initialize edge destination communities
         destination_communities = []
@@ -266,16 +248,14 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
         self.count_graph = nx.DiGraph()
 
         # Add nodes to graphs
-        for n, c, l in zip(self.nodes, self.communities, self.labels):
-            self.positive_sentiment_graph.add_node(n, community=c, label=l)
-            self.neutral_sentiment_graph.add_node(n, community=c, label=l)
-            self.negative_sentiment_graph.add_node(n, community=c, label=l)
-            self.count_graph.add_node(n, community=c, label=l)
+        for n, c, lbl in zip(self.nodes, self.communities, self.labels):
+            self.positive_sentiment_graph.add_node(n, community=c, label=lbl)
+            self.neutral_sentiment_graph.add_node(n, community=c, label=lbl)
+            self.negative_sentiment_graph.add_node(n, community=c, label=lbl)
+            self.count_graph.add_node(n, community=c, label=lbl)
 
         # Add edges to graphs
-        for u, v, s in zip(
-            self.source_nodes, self.destination_nodes, self.edge_sentiments
-        ):
+        for u, v, s in zip(self.source_nodes, self.destination_nodes, self.edge_sentiments):
             self.positive_sentiment_graph.add_edge(u, v, weight=2 + s)
             self.neutral_sentiment_graph.add_edge(u, v, weight=2 - np.abs(s))
             self.negative_sentiment_graph.add_edge(u, v, weight=2 - s)
@@ -413,8 +393,7 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
 
         if graph not in self.graph_attribute_map:
             raise ValueError(
-                'graph must be one of "count", "positive", "neutral", "negative", '
-                "0, 1, 2, or 3."
+                'graph must be one of "count", "positive", "neutral", "negative", 0, 1, 2, or 3.'
             )
 
         self.graph = getattr(self.simulator, self.graph_attribute_map[graph])
@@ -460,9 +439,7 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
                 "edge_sentiments": self.simulator.edge_sentiments,
             }
         )
-        edge_df["set_source_community"] = edge_df["source_node"].map(
-            node_df["set_community"]
-        )
+        edge_df["set_source_community"] = edge_df["source_node"].map(node_df["set_community"])
         edge_df["set_source_label"] = edge_df["source_node"].map(node_df["set_label"])
         edge_df["detected_source_community"] = edge_df["source_node"].map(
             node_df["detected_community"]
@@ -521,10 +498,7 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
                 set(community)
                 for community in cdlib_algorithms.eva(
                     g_original=self.graph.to_undirected(),
-                    labels={
-                        n: {"label": self.graph.nodes[n]["label"]}
-                        for n in self.graph.nodes
-                    },
+                    labels={n: {"label": self.graph.nodes[n]["label"]} for n in self.graph.nodes},
                     weight="weight",
                     resolution=self.resolution,
                     alpha=self.alpha,
@@ -567,12 +541,8 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
             - num_external_edges: The number of external edges in the community.
         """
         # Generate helper dataframes
-        comm_specific_node_df = self.node_df[
-            self.node_df.detected_community == community
-        ]
-        comm_specific_edge_df = self.edge_df[
-            self.edge_df.detected_source_community == community
-        ]
+        comm_specific_node_df = self.node_df[self.node_df.detected_community == community]
+        comm_specific_edge_df = self.edge_df[self.edge_df.detected_source_community == community]
         comm_specific_external_edge_df = comm_specific_edge_df[
             comm_specific_edge_df.detected_destination_community != community
         ]
@@ -582,9 +552,10 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
 
         # Evaluate community on generic metrics
         try:
-            detected_homophily = (
-                comm_specific_node_df.set_label.value_counts().sort_index().iloc[0]
-                / len(comm_specific_node_df)
+            detected_homophily = comm_specific_node_df.set_label.value_counts().sort_index().iloc[
+                0
+            ] / len(
+                comm_specific_node_df
             )  # % of the most frequent labels
         except (KeyError, ZeroDivisionError):
             detected_homophily = 0  # THERE ARE NO NODES
@@ -596,17 +567,19 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
             detected_isolation = 0  # THERE ARE NO EDGES
         try:
             # negative external edges are encoded as -1
-            detected_insulation = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().get(-1, 0)
-                / len(comm_specific_external_edge_df)
+            detected_insulation = comm_specific_external_edge_df.edge_sentiments.value_counts().get(
+                -1, 0
+            ) / len(
+                comm_specific_external_edge_df
             )  # % negative external edges
         except ZeroDivisionError:
             detected_insulation = 0  # THERE ARE NO EXTERNAL EDGES
         try:
             # positive internal edges are encoded as 1
-            detected_affinity = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(1, 0)
-                / len(comm_specific_internal_edge_df)
+            detected_affinity = comm_specific_internal_edge_df.edge_sentiments.value_counts().get(
+                1, 0
+            ) / len(
+                comm_specific_internal_edge_df
             )  # % of positive internal edges
         except ZeroDivisionError:
             detected_affinity = 0  # THERE ARE NO INTERNAL EDGES
@@ -614,8 +587,7 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
             detected_purity = 0  # THERE ARE NO NODES
         else:
             detected_purity = (
-                comm_specific_node_df.set_label.value_counts()
-                / len(comm_specific_node_df)
+                comm_specific_node_df.set_label.value_counts() / len(comm_specific_node_df)
             ).prod()
             # product of % of all labels (Similar to `detected_homophily` but looks at all labels)
         try:
@@ -626,33 +598,37 @@ class GraphEvaluator:  # pylint: disable=too-many-instance-attributes
             detected_conductance = 0  # THERE ARE NO EDGES
         try:
             # neutral external edges are encoded as 0
-            detected_equity = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().get(0, 0)
-                / len(comm_specific_external_edge_df)
+            detected_equity = comm_specific_external_edge_df.edge_sentiments.value_counts().get(
+                0, 0
+            ) / len(
+                comm_specific_external_edge_df
             )  # % neutral external edges
         except ZeroDivisionError:
             detected_equity = 0  # THERE ARE NO EXTERNAL EDGES
         try:
             # positive external edges are encoded as 1
-            detected_altruism = (
-                comm_specific_external_edge_df.edge_sentiments.value_counts().get(1, 0)
-                / len(comm_specific_external_edge_df)
+            detected_altruism = comm_specific_external_edge_df.edge_sentiments.value_counts().get(
+                1, 0
+            ) / len(
+                comm_specific_external_edge_df
             )  # % positive external edges
         except ZeroDivisionError:
             detected_altruism = 0  # THERE ARE NO EXTERNAL EDGES
         try:
             # neutral internal edges are encoded as 0
-            detected_balance = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(0, 0)
-                / len(comm_specific_internal_edge_df)
+            detected_balance = comm_specific_internal_edge_df.edge_sentiments.value_counts().get(
+                0, 0
+            ) / len(
+                comm_specific_internal_edge_df
             )  # % of neutral internal edges
         except ZeroDivisionError:
             detected_balance = 0  # THERE ARE NO INTERNAL EDGES
         try:
             # negative internal edges are encoded as -1
-            detected_hostility = (
-                comm_specific_internal_edge_df.edge_sentiments.value_counts().get(-1, 0)
-                / len(comm_specific_internal_edge_df)
+            detected_hostility = comm_specific_internal_edge_df.edge_sentiments.value_counts().get(
+                -1, 0
+            ) / len(
+                comm_specific_internal_edge_df
             )  # % of negative internal edges
         except ZeroDivisionError:
             detected_hostility = 0  # THERE ARE NO INTERNAL EDGES
