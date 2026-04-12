@@ -13,11 +13,3 @@ repos:
     hooks:
       - id: ruff-format
         name: ruff-format (preferred formatter)
-
-  # TODO: remove black hook once ruff-format is confirmed stable portfolio-wide
-  - repo: https://github.com/psf/black
-    rev: 24.3.0
-    hooks:
-      - id: black
-        name: black (deprecated — use ruff-format)
-
