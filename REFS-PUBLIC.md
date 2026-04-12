@@ -1,4 +1,4 @@
-# REFS-PUBLIC.md — Public References
+# REFS-PUBLIC.md - Public References
 
 > Record external public repositories, datasets, documentation, APIs, or other
 > public resources that this repository utilizes or depends on.
@@ -6,22 +6,20 @@
 
 ## Public Repositories
 
-<!-- External repos this project depends on, forks, or integrates with:
-- https://github.com/org/repo — description of usage
--->
+- https://github.com/minrk/wurlitzer - optional notebook and stdout-capture dependency referenced in the README
+- https://github.com/saref/bayan - community-detection implementation referenced in the README
 
 ## Public Datasets and APIs
 
-<!-- Publicly accessible data sources, REST APIs, or external feeds consumed here:
-- https://example.com/dataset — description of usage
--->
+- No standing public datasets or APIs are required at the repo level; experiments choose their own local or public graph inputs.
 
 ## Documentation and Specifications
 
-<!-- Reference docs, RFCs, standards, or upstream project documentation:
-- https://docs.example.com — description
--->
+- https://cdlib.readthedocs.io/ - CDlib community-detection documentation
+- https://leidenalg.readthedocs.io/ - Leiden algorithm reference
+- https://mapequation.github.io/infomap/ - Infomap algorithm reference
+- https://pypi.org/project/sonetsim/ - published package metadata reference
 
 ## Notes
 
-<!-- Any context about how these public references are used or versioned -->
+- This repo is simulation-first. Public graph datasets should be recorded here only when a specific benchmark becomes a stable part of the project.

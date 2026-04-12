@@ -69,7 +69,7 @@ jobs:
         name: pylint report ${{ matrix.python-version }}
         path: pylint-${{ matrix.python-version }}.txt
         overwrite: true
-        
+
     - name: Run the test cases ${{ matrix.python-version }}
       run: |
         python -m pytest -q sonetsim/tests/simulator_validator.py
