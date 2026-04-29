@@ -6,6 +6,11 @@ authors = ["ksan <casonk@umich.edu>"]
 license = "LGPL"
 readme = "README.md"
 
+[tool.poetry.urls]
+Homepage = "https://github.com/casonk/sonetsim"
+Repository = "https://github.com/casonk/sonetsim"
+Changelog = "https://github.com/casonk/sonetsim/blob/main/CHANGELOG.md"
+
 [tool.poetry.dependencies]
 python = ">=3.8, <3.11"
 cdlib = "^0.3.0"
