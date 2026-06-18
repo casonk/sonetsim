@@ -19,16 +19,14 @@ dependencies = [
     "networkx",
     "numpy>=1.20",
     "pandas>=1.3",
-]
-
-[project.optional-dependencies]
-algorithms = [
     "cdlib>=0.3.0",
     "bayanpy>=0.7.6",
     "leidenalg>=0.10.1",
     "wurlitzer>=3.0.3",
     "infomap>=2.7.1",
 ]
+
+[project.optional-dependencies]
 dev = [
     "pytest>=8",
     "ruff",
