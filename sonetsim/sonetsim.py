@@ -216,7 +216,7 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
 
         # Initialize edge sentiments
         edge_sentiments = []
-        for c, _c in zip(self.source_communities, self.destination_communities):
+        for c, _c in zip(self.source_communities, self.destination_communities, strict=False):
             i = self.insulation[c]
             f = self.affinity[c]
             a = [1, 0, -1]  ## Positive, Neutral, Negative
@@ -248,14 +248,16 @@ class GraphSimulator:  # pylint: disable=too-many-instance-attributes
         self.count_graph = nx.DiGraph()
 
         # Add nodes to graphs
-        for n, c, lbl in zip(self.nodes, self.communities, self.labels):
+        for n, c, lbl in zip(self.nodes, self.communities, self.labels, strict=False):
             self.positive_sentiment_graph.add_node(n, community=c, label=lbl)
             self.neutral_sentiment_graph.add_node(n, community=c, label=lbl)
             self.negative_sentiment_graph.add_node(n, community=c, label=lbl)
             self.count_graph.add_node(n, community=c, label=lbl)
 
         # Add edges to graphs
-        for u, v, s in zip(self.source_nodes, self.destination_nodes, self.edge_sentiments):
+        for u, v, s in zip(
+            self.source_nodes, self.destination_nodes, self.edge_sentiments, strict=False
+        ):
             self.positive_sentiment_graph.add_edge(u, v, weight=2 + s)
             self.neutral_sentiment_graph.add_edge(u, v, weight=2 - np.abs(s))
             self.negative_sentiment_graph.add_edge(u, v, weight=2 - s)
