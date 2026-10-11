@@ -15,6 +15,9 @@
 
 ## Documentation and Specifications
 
+- https://networkx.org/documentation/stable/ - NetworkX graph-model reference used by simulation and analysis helpers
+- https://numpy.org/doc/ - NumPy numerical-array reference used by simulation workflows
+- https://pandas.pydata.org/docs/ - pandas tabular-data reference used by result handling
 - https://cdlib.readthedocs.io/ - CDlib community-detection documentation
 - https://leidenalg.readthedocs.io/ - Leiden algorithm reference
 - https://mapequation.github.io/infomap/ - Infomap algorithm reference
