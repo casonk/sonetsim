@@ -1,4 +1,4 @@
-@startuml classes_sonetsim
+@startuml classes_checkout
 set namespaceSeparator none
 class "GraphEvaluator" as sonetsim.sonetsim.GraphEvaluator {
   algorithm : NoneType
