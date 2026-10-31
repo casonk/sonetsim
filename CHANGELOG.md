@@ -4,6 +4,8 @@ All notable changes to `sonetsim` are documented here.
 
 ## Unreleased
 
+- Build the PyPI distribution with the reusable `python-build.yml`; the upload stays in a caller-local `pypi` job so trusted publishing works, and the release can also be started by hand.
+
 - Added the portfolio-standard governance, continuity, and contributor baseline files.
 
 ## 1.0.0 - 2024-03-28
