@@ -5,8 +5,6 @@
 <!-- badges:end -->
 
 [![PyPI](https://img.shields.io/pypi/v/sonetsim)](https://pypi.org/project/sonetsim/)
-[![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL_v2.1-blue.svg)](LICENSE)
-[![CI](https://github.com/casonk/sonetsim/actions/workflows/black-pylint-pytest.yml/badge.svg)](https://github.com/casonk/sonetsim/actions)
 
 A library for **so**cial **net**work **sim**ulation and community detection.
 
