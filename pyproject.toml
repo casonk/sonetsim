@@ -7,7 +7,7 @@ name = "sonetsim"
 version = "1.0.0"
 description = "A library for (so)cial (net)work (sim)ulation."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "LGPL-2.1" }
 authors = [{ name = "Cason Konzer", email = "casonk@umich.edu" }]
 keywords = ["social network", "simulation", "community detection", "graph"]
@@ -48,7 +48,7 @@ pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
